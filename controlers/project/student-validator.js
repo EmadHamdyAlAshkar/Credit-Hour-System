@@ -1,5 +1,5 @@
 import {body} from "express-validator"
-import project from "../../models/project/project-model"
+import project from "../../models/student/student-model"
 
 const create_validations=[
     body("name").notEmpty().withMessage("name can't be empty").isString().withMessage("name must be string!!!"),
