@@ -1,4 +1,5 @@
 import student from "../../models/student/student-model"
+import courses from "../../models/course/course-model"
 import { validationResult, matchedData } from 'express-validator'
 import multer from "../../helpers/Multer"
 import { response } from "express";
@@ -57,6 +58,29 @@ async function updatestudent(req, res, next) {
     _id: req.body.id
   }, obj)
   res.send(students)
+}
+async function registercourse(req, res, next){
+let studid= req.body.studid
+let courseid = req.body.courseid
+let stud= await student.findOne({
+_id: studid
+}
+)
+let course=await courses.findOne({
+  _id:courseid
+})
+
+if (course.prerequisites.length!=0){
+  course.prerequisites.map((pre)=>{
+    if(pre in stud.finishedcourses)
+    {
+      console.log("found");
+    }
+    else{res.send(`course ${pre} not found in your finished courses`)}
+  })
+}
+res.send("course registered")
+
 }
 
 /*

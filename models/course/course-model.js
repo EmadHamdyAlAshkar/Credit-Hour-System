@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import autopopulate from "mongoose-autopopulate"
 const courseSchema = mongoose.Schema({
+    //course code
     _id: {
-        type: Number,
+        type: String,
     },
     name: {
         type: String,
@@ -13,15 +14,21 @@ const courseSchema = mongoose.Schema({
     , hours: {
         type: Number,
     }
-    ,day:{
+    ,code:{
         type: String,
     }
-    ,time:{
-        type: String,
+    ,semester:{
+        type: Number,
     }
-    ,hall:{
-        type: String,
-    },
+    ,prerequisites:[
+        {
+            type:String,
+            ref:"courses",
+            autopopulate:{
+                select:"name"
+            }
+        }
+    ],
 
 }, {
     timestamps: true
@@ -30,5 +37,5 @@ const courseSchema = mongoose.Schema({
 courseSchema.plugin(autopopulate)
 import checkQuery from '../../plugins/checkQuery'
 courseSchema.plugin(checkQuery)
-const course = mongoose.model('course', courseSchema);
+const course = mongoose.model('courses', courseSchema);
 export default course;

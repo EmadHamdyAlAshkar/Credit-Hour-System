@@ -1,5 +1,5 @@
 import express from "express"
-import course_Controller from "../controlers/course-controller"
+import course_Controller from "../controlers/project/course-controller"
 
 const router = express.Router();
 

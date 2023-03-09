@@ -3,22 +3,36 @@ import course from "../../models/course/course-model";
 
 async function createcourse(req, res, next) {
 
-    const corse = new course({
-        _id: req.body.id,
+    let obj={
+        _id: req.body.code,
         name: req.body.name,
         department: req.body.department,
         hours: req.body.hours,
-        day: req.body.day,
-        time: req.body.time,
-        hall: req.body.hall,
-
-    })
+        code: req.body.code,
+        semester: req.body.semester,
+        
+    }
+    if( 'prerequisites' in req.body){
+        let pres=[]
+        pres=req.body.prerequisites.replace('[','').replace(']','').split(',')
+        pres.map(async (pre)=>{
+            let found =await course.exists({_id:pre})
+            console.log(await course.findOne({_id:pre}));
+            if(!found){
+                res.send("this course not exist : ",pre)
+            }
+        })
+        obj.prerequisites=pres
+    }
+    const corse = new course(obj)
+    console.log(corse)
     await corse.save((error, result) => {
         if (error) {
             res.send(error)
         }
         else {
-            res.send("Course saved")
+            
+            res.send(corse)
         }
     });
 }
