@@ -3,6 +3,8 @@ import courses from "../../models/course/course-model"
 import { validationResult, matchedData } from 'express-validator'
 import multer from "../../helpers/Multer"
 import { response } from "express";
+import bcrypt from "bcrypt"
+
 // create student
 async function createstudent(req, res, next) {
 
@@ -15,7 +17,13 @@ async function createstudent(req, res, next) {
     level: req.body.level,
     username: req.body.username,
     password: req.body.password,
+    isStudent: req.body.isStudent,
+    currentcourses: req.body.currentcourses,
+    finishedcourses: req.body.finishedcourses,
+
   })
+  const saltrounds = 10
+  stud.password = await bcrypt.hash(stud.password,saltrounds)
   await stud.save((error, result) => {
     if (error) {
       res.send(error)
@@ -24,6 +32,14 @@ async function createstudent(req, res, next) {
       res.send("Student saved")
     }
   });
+}
+async function getonestudent(req,res) {
+  let stud = await student.findById(req.body._id).select('-password')
+  if(!stud){
+   return res.send("Student not found")
+  }
+  res.send(stud)
+  
 }
 async function getallstudents(req, res, next) {
   let obj = {}
@@ -74,7 +90,7 @@ if (course.prerequisites.length!=0){
   course.prerequisites.map((pre)=>{
     if(pre in stud.finishedcourses)
     {
-      console.log("found");
+      return console.log("found");
     }
     else{res.send(`course ${pre} not found in your finished courses`)}
   })
@@ -164,5 +180,7 @@ export default {
   createstudent,
   getallstudents,
   updatestudent,
-  deletestudent
+  deletestudent,
+  registercourse,
+  getonestudent
 }

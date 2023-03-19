@@ -14,5 +14,14 @@ router.use('/course',courserouter);
 import instructorrouter from "./instructor-router"
 router.use('/instructor',instructorrouter);
 
+import authrouter from "./auth-router"
+router.use("/",authrouter)
+
+import profilerouter from ".//profile-router"
+router.use("/",profilerouter)
+
+import userrouter from "./user-router"
+router.use("/user",userrouter) 
+
 
 export default router;
