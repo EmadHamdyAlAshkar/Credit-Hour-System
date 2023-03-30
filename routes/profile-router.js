@@ -11,6 +11,7 @@ router.get('/profile',auth,async (req,res)=>{
     const staffprofile = await staff.findById(req.user._id).select('-password')
     const userprofile = await user.findById(req.user._id).select('-password')
     const studentprofile = await student.findById(req.user._id).select('-password')
+   
     if(staffprofile){
        return res.send(staffprofile)
     }

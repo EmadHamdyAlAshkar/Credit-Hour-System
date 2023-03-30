@@ -23,5 +23,7 @@ router.use("/",profilerouter)
 import userrouter from "./user-router"
 router.use("/user",userrouter) 
 
+import adminrouter from "./admin-router"
+router.use("/admin",adminrouter)
 
 export default router;
