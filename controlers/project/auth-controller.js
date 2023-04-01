@@ -51,7 +51,7 @@ async function login(req,res) {
     let staf = await staff.findOne({_id: req.body._id})
     let stud = await student.findOne({_id: req.body._id})
     let admn = await admin.findOne({username: req.body.username})
-    let instruct = await instructor.findOne({username: req.body.username})
+    let instruct = await instructor.findOne({_id: req.body._id})
     if(usr){
         const checkpassword = await bcrypt.compare(req.body.password,usr.password)
         if(!checkpassword){

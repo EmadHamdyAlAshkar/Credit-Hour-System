@@ -8,7 +8,7 @@ import bcrypt from "bcrypt"
 async function createinstructor(req, res, next) {
 
   const instruct = new instructor({
-    _id: req.body.id,
+    _id: req.body._id,
     name: req.body.name,
     qualification: req.body.qualification,
     gender: req.body.gender,
