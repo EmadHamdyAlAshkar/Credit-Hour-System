@@ -8,6 +8,7 @@ import admin from "../../models/admin/admin-model"
 import student from "../../models/student/student-model"
 import staff from "../../models/staff/staff-model"
 import user from "../../models/course/user/user-model"
+import instructor from "../../models/instructor/instructor-model"
 
 // async function login(req,res) {
 //     let usr
@@ -49,7 +50,8 @@ async function login(req,res) {
     let usr = await user.findOne({_id: req.body._id})
     let staf = await staff.findOne({_id: req.body._id})
     let stud = await student.findOne({_id: req.body._id})
-    // let admn = await admin.findOne({username: req.body.username})
+    let admn = await admin.findOne({username: req.body.username})
+    let instruct = await instructor.findOne({username: req.body.username})
     if(usr){
         const checkpassword = await bcrypt.compare(req.body.password,usr.password)
         if(!checkpassword){
@@ -76,14 +78,22 @@ async function login(req,res) {
         const token = stud.generateTokens()
     res.json({status: "true",message : "Login successful",type: "Student" ,data :stud,token :token})
     }
-    // else if(admn){
-    //     const checkpassword = await bcrypt.compare(req.body.password,admn.password)
-    //     if(!checkpassword){
-    //         return res.status(404).send('Invalid email or password!')
-    //     }    
-    //     const token = admn.generateTokens()
-    // res.send('Hello '+admn.username+" "+token+" you are admin")
-    // }
+    else if(admn){
+        const checkpassword = await bcrypt.compare(req.body.password,admn.password)
+        if(!checkpassword){
+            return res.status(404).send('Invalid email or password!')
+        }    
+        const token = admn.generateTokens()
+    res.send('Hello '+admn.username+" "+token+" you are admin")
+    }
+    else if(instruct){
+        const checkpassword = await bcrypt.compare(req.body.password,instruct.password)
+        if(!checkpassword){
+            return res.status(404).send('Invalid email or password!')
+        }    
+        const token = instruct.generateTokens()
+        res.json({status: "true",message : "Login successful",type: "Instructor" ,data :instruct,token :token})
+    }
     
     // const token = Jwt.sign({_id:usr._id},"privatekey")
     else{

@@ -4,30 +4,33 @@ import  Jwt  from "jsonwebtoken"
 // import { boolean } from "joi";
 
 const staffSchema = mongoose.Schema({
-    _id: {
-        type: Number,
+    _id:{
+        type:Number,
     },
-    name: {
-        type: String,
+    name:{
+        type:String,
 
     }
-    , department: {
-        type: String,
+    ,qualification:{
+        type:String,
     }
-    , gender: {
-        type: String,
+    ,gender:{
+        type:String,
     }
-    , email: {
-        type: String,
+    ,email:{
+        type:String,
+        unique: true,
     }
-
-    , username: {
-        type: String,
+    ,mobile:{
+        type:Number,
     }
-    , password: {
-        type: String,
+    ,username:{
+        type:String,
     }
-    , isStaff: {
+    ,password:{
+        type:String, 
+    }
+    ,isStaff:{
         type: Boolean,
     }
 
@@ -40,9 +43,10 @@ staffSchema.methods.generateTokens = function () {
     const token = Jwt.sign({
         _id:this._id,
         name:this.name,
-        department:this.department,
+        qualification: this.qualification,
         gender:this.gender,
         email:this.email,
+        mobile: this.mobile,
         username:this.username,
         isStaff: this.isStaff
 

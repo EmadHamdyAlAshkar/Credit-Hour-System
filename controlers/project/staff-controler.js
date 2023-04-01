@@ -11,16 +11,16 @@ async function createstaff(req, res, next) {
     const staf = new staff({
         _id: req.body.id,
         name: req.body.name,
-        department: req.body.department,
+        qualification: req.body.qualification,
         gender: req.body.gender,
         email: req.body.email,
-        level: req.body.level,
+        mobile: req.body.mobile,
         username: req.body.username,
         password: req.body.password,
         isStaff: req.body.isStaff,
     })
     const saltrounds = 10
-    staf.password = await bcrypt.hash(staf.password,saltrounds)
+    staf.password = await bcrypt.hash(staf.password, saltrounds)
     await staf.save((error, result) => {
         if (error) {
             res.send(error)
@@ -72,14 +72,14 @@ async function updatestaff(req, res, next) {
 //     if(staf){
 //          res.send("Staff found")
 //     }
-   
+
 //     else if(stud){
 //         res.send("Student found")
 //     }
 //     else{
 //         return res.status(404).send('Invalid email or password!')
 //     }
-    
+
 
 // }
 
@@ -91,26 +91,26 @@ async function addstaff(req, res, next) {
     //     return res.send(error.details.message)
     // }
 
-    const staf = new staff(_.pick(req.body,['_id','name','email','password','gender'])
-    // {
-    //     _id: req.body._id,
-    //     name: req.body.name,
-    //     department: req.body.department,
-    //     gender: req.body.gender, 
-    //     email: req.body.email,
-    //     level: req.body.level,
-    //     username: req.body.username,
-    //     password: req.body.password,
-    // }
+    const staf = new staff(_.pick(req.body, ['_id', 'name', 'email', 'password', 'gender'])
+        // {
+        //     _id: req.body._id,
+        //     name: req.body.name,
+        //     department: req.body.department,
+        //     gender: req.body.gender, 
+        //     email: req.body.email,
+        //     level: req.body.level,
+        //     username: req.body.username,
+        //     password: req.body.password,
+        // }
     )
     const saltrounds = 10
-    staf.password = await bcrypt.hash(staf.password,saltrounds)
+    staf.password = await bcrypt.hash(staf.password, saltrounds)
     await staf.save((error, result) => {
         if (error) {
             res.send(error)
         }
         else {
-            res.send(_.pick(staf,['_id','name','email']))
+            res.send(_.pick(staf, ['_id', 'name', 'email']))
         }
     });
 }
@@ -120,5 +120,5 @@ export default {
     updatestaff,
     deletestaff,
     addstaff,
-    
+
 }

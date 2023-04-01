@@ -3,6 +3,7 @@ import instructor from "../../models/instructor/instructor-model";
 import { validationResult, matchedData } from 'express-validator'
 import multer from "../../helpers/Multer"
 import { response } from "express";
+import bcrypt from "bcrypt"
 // create instructor
 async function createinstructor(req, res, next) {
 
@@ -15,7 +16,10 @@ async function createinstructor(req, res, next) {
     mobile: req.body.mobile,
     username: req.body.username,
     password: req.body.password,
+    isInstructor: req.body.isInstructor,
   })
+  const saltrounds = 10
+  instruct.password = await bcrypt.hash(instruct.password, saltrounds)
   await instruct.save((error, result) => {
     if (error) {
       res.send(error)
@@ -53,7 +57,7 @@ async function updateinstructor(req, res, next) {
   if ("password" in req.body) {
     obj.password = req.body.password
   }
-  
+
   const instructors = await instructor.findOneAndUpdate({
     _id: req.body.id
   }, obj)

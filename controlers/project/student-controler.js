@@ -23,7 +23,7 @@ async function createstudent(req, res, next) {
 
   })
   const saltrounds = 10
-  stud.password = await bcrypt.hash(stud.password,saltrounds)
+  stud.password = await bcrypt.hash(stud.password, saltrounds)
   await stud.save((error, result) => {
     if (error) {
       res.send(error)
@@ -33,13 +33,13 @@ async function createstudent(req, res, next) {
     }
   });
 }
-async function getonestudent(req,res) {
+async function getonestudent(req, res) {
   let stud = await student.findById(req.body._id).select('-password')
-  if(!stud){
-   return res.send("Student not found")
+  if (!stud) {
+    return res.send("Student not found")
   }
   res.send(stud)
-  
+
 }
 async function getallstudents(req, res, next) {
   let obj = {}
@@ -69,133 +69,210 @@ async function updatestudent(req, res, next) {
   if ("password" in req.body) {
     obj.password = req.body.password
   }
-  
+
   const students = await student.findOneAndUpdate({
     _id: req.body.id
   }, obj)
-  res.send(students)
+  return res.send(students)
 }
-// async function registercourse(req, res, next){
-// let studid= req.body.studid
-// let courseid = req.body.courseid
-// let stud= await student.findOne({
-// _id: studid
-// }
-// )
-// let course=await courses.findOne({
-//   _id:courseid
-// })
-// let found = false
-// // console.log("pre***********************************"+typeof(course.prerequisites));
-// console.log("******************************finished************************************"+(stud.finishedcourses[0]));
-
-
-// if (course.prerequisites.length!=0){
-//   course.prerequisites.map((pre)=>{
-//     console.log("pre"+pre)
-//     console.log("**here***"+stud.finishedcourses.includes(pre));
-//     stud.finishedcourses.map((finished)=>{
-//       if(finished._id==pre._id){
-//         found=true
-//         return 
-//       }
-//     })
-//     if(found == false){
-//       return
-//     }
-//     // if(stud.finishedcourses.includes(pre))
-//     // {
-//     //   console.log("**here***");
-//     //   // return console.log("found");
-//     // }
-//     // else{
-//     //   found=false
-//     //    return res.send(`course ${pre} not found in your finished courses`)
-//     // }
-//   })    
- 
-
-// }
-//  if(found){
-    
-
-//     let newcourse = stud.currentcourses
-//     newcourse.push(course)
-//     await student.findOneAndUpdate({_id:studid},{currentcourses:newcourse})
-    
-//   }  
-//   else{
-//     if (course.prerequisites != 0){return res.send(`course ${course.name} not found in your finished courses`)}
-//     else{
-//       let newcourse = stud.finishedcourses
-//       newcourse.push(course)
-//       await student.findOneAndUpdate({_id:studid},{finishedcourses:newcourse})
-//     }
-//   }
-// res.send("course registered")
-
-// }
-async function registercourse(req, res, next){
-  let studid= req.body.studid
+async function registercourse(req, res, next) {
+  let studid = req.body.studid
   let courseid = req.body.courseid
-  let stud= await student.findOne({
-  _id: studid
+  let stud = await student.findOne({
+    _id: studid
   }
   )
-  let course=await courses.findOne({
-    _id:courseid
+  let course = await courses.findOne({
+    _id: courseid
   })
-  let found = false
-  // console.log("pre***********************************"+typeof(course.prerequisites));
-  console.log("******************************finished************************************"+(stud.finishedcourses[0]));
-  let foundpre = await courses.findOne({finishedcourses: req.body.finishedcourses})
-if(foundpre){res.send("already registered")}
-else{
-  if (course.prerequisites.length!=0){
-    course.prerequisites.map((pre)=>{
-      console.log("pre"+pre)
-      console.log("**here***"+stud.finishedcourses.includes(pre));
-      stud.finishedcourses.map((finished)=>{
-        if(finished._id==pre._id){
-          found=true
-          return 
-        }
-      })
-      if(found == false){
-        return
-      }
-      // if(stud.finishedcourses.includes(pre))
-      // {
-      //   console.log("**here***");
-      //   // return console.log("found");
-      // }
-      // else{
-      //   found=false
-      //    return res.send(`course ${pre} not found in your finished courses`)
-      // }
-    })    
-   
-  
+  if(!stud){
+    return res.status(404).send(`that student of id : ${studid} is not found!`)
   }
-   if(found){
-      
-  
-      let newcourse = stud.finishedcourses
+  if (course) {
+    let reg = false
+    await Promise.all(stud.currentcourses.map(async (cours) => {
+      if (cours._id == courseid) {
+        reg = true
+      }
+    }))
+
+    let finished = false
+    await Promise.all(stud.finishedcourses.map(async (cours) => {
+      if (cours._id == courseid) {
+        finished = true
+      }
+    }))
+    if (reg || finished) {
+      console.log(`course :{ ${course.name} } is already registred !`);
+      if (reg) {
+        return await res.status(405).send(`course :{ ${course.name} } is already registred !`)
+      }
+      else {
+        return await res.status(405).send(`course :{ ${course.name} } is already passed !`)
+      }
+
+    }
+    let found = false
+    if (course.prerequisites.length != 0) {
+      await Promise.all(course.prerequisites.map((pre) => {
+        stud.finishedcourses.map((finished) => {
+          if (finished._id == pre._id) {
+            found = true
+            return
+          }
+        })
+        if (found == false) {
+          return
+        }
+      }))
+    }
+    if (found) {
+      let newcourse = stud.currentcourses
       newcourse.push(course)
-      await student.findOneAndUpdate({_id:studid},{finishedcourses:newcourse})
+      await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
       
-    }  
-    else{
-      if (course.prerequisites != 0){return res.send(`course ${course.name} not found in your finished courses`)}
-      else{
+    }
+    else {
+      if (course.prerequisites != 0) { return res.send(`course ${course.name} not found in your finished courses`) }
+      else {
+        
         let newcourse = stud.finishedcourses
         newcourse.push(course)
-        await student.findOneAndUpdate({_id:studid},{finishedcourses:newcourse})
+        await student.findOneAndUpdate({ _id: studid }, { finishedcourses: newcourse })
       }
     }
-  res.send("course registered")}
-  
+    
+    return res.send("course registered")
+  } else {
+    return res.status(404).send(`that course of id : ${courseid} is not found!`)
   }
+}
+// async function registercourse(req, res, next) {
+//   let studid = req.body.studid
+//   let courseid = req.body.courseid
+//   let stud = await student.findOne({
+//     _id: studid
+//   }
+//   )
+//   let course = await courses.findOne({
+//     _id: courseid
+//   })
+//   let found = false
+//   // console.log("pre***********************************"+typeof(course.prerequisites));
+//   console.log("******************************finished************************************" + (stud.finishedcourses[0]));
+//   let foundpre = await courses.findOne({ finishedcourses: req.body.finishedcourses })
+//   if (foundpre) { res.send("already registered") }
+//   else {
+//     if (course.prerequisites.length != 0) {
+//       course.prerequisites.map((pre) => {
+//         console.log("pre" + pre)
+//         console.log("**here***" + stud.finishedcourses.includes(pre));
+//         stud.finishedcourses.map((finished) => {
+//           if (finished._id == pre._id) {
+//             found = true
+//             return
+//           }
+//         })
+//         if (found == false) {
+//           return
+//         }
+//         // if(stud.finishedcourses.includes(pre))
+//         // {
+//         //   console.log("**here***");
+//         //   // return console.log("found");
+//         // }
+//         // else{
+//         //   found=false
+//         //    return res.send(`course ${pre} not found in your finished courses`)
+//         // }
+//       })
+
+
+
+//     }
+//     if (found) {
+
+
+//       let newcourse = stud.finishedcourses
+//       newcourse.push(course)
+//       await student.findOneAndUpdate({ _id: studid }, { finishedcourses: newcourse })
+
+//     }
+//     else {
+//       if (course.prerequisites != 0) { return res.send(`course ${course.name} not found in your finished courses`) }
+//       else {
+//         let newcourse = stud.finishedcourses
+//         newcourse.push(course)
+//         await student.findOneAndUpdate({ _id: studid }, { finishedcourses: newcourse })
+//       }
+//     }
+//     res.send("course registered")
+//   }
+
+// }
+async function enrollcourse(req, res) {
+  // let stud = await student.findOne({_id: req.body.studid})
+  // let course = await courses.findOne({ _id: req.body.courseid })
+  // if (!stud||!course) {
+  //   res.send("not found")
+  // }
+  // else {
+  //   res.send("Hello")
+  // }
+  const { studentId, courseId } = req.body;
+  const stud = await student.findById(studentId);
+  if (!stud) {
+    return res.status(404).json({ msg: 'Student not found' });
+  }
+
+  const cours = await courses.findById(courseId);
+  if (!cours) {
+    return res.status(404).json({ msg: 'Subject not found' });
+  }
+  let check = stud.currentcourses.includes(cours)
+  if (check) {
+    return res.status(400).json({ msg: 'Student already enrolled in this subject' });
+  }
+  stud.currentcourses.push(courseId);
+  await stud.save();
+  res.send("Course added")
+}
+// router.post('/enroll', async (req, res) => {
+//   const { studentId, subjectId } = req.body;
+
+//   try {
+//     // Get the student
+//     const student = await Student.findById(studentId);
+//     if (!student) {
+//       return res.status(404).json({ msg: 'Student not found' });
+//     }
+
+//     // Get the subject
+//     const subject = await Subject.findById(subjectId);
+//     if (!subject) {
+//       return res.status(404).json({ msg: 'Subject not found' });
+//     }
+
+//     // Check if the student has already enrolled in the subject
+//     if (student.enrolledSubjects.includes(subjectId)) {
+//       return res.status(400).json({ msg: 'Student already enrolled in this subject' });
+//     }
+
+//     // Check if the student has the prerequisite for the subject
+//     if (subject.prerequisite && !student.enrolledSubjects.includes(subject.prerequisite)) {
+//       return res.status(400).json({ msg: 'Student does not have the prerequisite for this subject' });
+//     }
+
+//     // Enroll the student in the subject
+//     student.enrolledSubjects.push(subjectId);
+//     await student.save();
+
+//     res.json({ msg: 'Student enrolled in subject' });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('Server Error');
+//   }
+// });
 
 
 
@@ -282,5 +359,6 @@ export default {
   updatestudent,
   deletestudent,
   registercourse,
-  getonestudent
+  getonestudent,
+  enrollcourse
 }

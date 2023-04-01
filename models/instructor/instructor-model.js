@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import autopopulate from "mongoose-autopopulate"
+import  Jwt  from "jsonwebtoken"
+
 const instructorSchema=mongoose.Schema({
     _id:{
         type:Number,
@@ -16,6 +18,7 @@ const instructorSchema=mongoose.Schema({
     }
     ,email:{
         type:String,
+        unique: true,
     }
     ,mobile:{
         type:Number,
@@ -26,10 +29,31 @@ const instructorSchema=mongoose.Schema({
     ,password:{
         type:String, 
     }
+    ,isInstructor:{
+        type: Boolean,
+    }
     
 },{ timestamps: true
     , versionKey: false
 })
+instructorSchema.methods.generateTokens = function () {
+    const token = Jwt.sign({
+        _id:this._id,
+        name:this.name,
+        qualification: this.qualification,
+        gender:this.gender,
+        email:this.email,
+        mobile: this.mobile,
+        username:this.username,
+        isInstructor: this.isInstructor
+
+
+    },"privatekey")
+    return token
+
+    
+}
+
 instructorSchema.plugin(autopopulate)
 import checkQuery from '../../plugins/checkQuery'
 instructorSchema.plugin(checkQuery)

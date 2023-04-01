@@ -13,4 +13,6 @@ router.get('/getonestudent',[auth,staff],student_conltroler.getonestudent)
 router.put('/updatestudent',student_conltroler.updatestudent)
 router.delete('/deletestudent',[auth,staff],student_conltroler.deletestudent)
 router.post('/registercourse',student_conltroler.registercourse)
+router.post('/enrollcourse',student_conltroler.enrollcourse)
+
 export default router;
