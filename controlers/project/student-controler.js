@@ -7,7 +7,10 @@ import bcrypt from "bcrypt"
 
 // create student
 async function createstudent(req, res, next) {
-
+let stu = await student.findById({_id : req.body.id})
+if (stu){
+  return res.json({message: "Student already exists"})
+}
   const stud = new student({
     _id: req.body.id,
     name: req.body.name,
@@ -29,7 +32,8 @@ async function createstudent(req, res, next) {
       res.send(error)
     }
     else {
-      res.send("Student saved")
+      res.json({status: "true",message : "Student saved"})
+      
     }
   });
 }
