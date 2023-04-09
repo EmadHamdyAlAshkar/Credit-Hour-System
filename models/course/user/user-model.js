@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
     }
     , gender: {
         type: String,
-        required: true,
+        
     }
     , email: {
         type: String,

@@ -8,32 +8,95 @@ const studentSchema=mongoose.Schema({
         type:Number,
         required: true,
     },
-    name:{
+    full_name:{
         type:String,
         required: true,
 
-    }
-    ,department:{
+    },
+    country_of_nationality:{
+        type: String,
+        required: true,
+    },
+    religion:{
+        type: String,
+        required: true,
+    },
+    date_of_birth:{
+        type: Number,
+        required: true,
+    },
+    place_of_birth:{
+        type: String,
+        required: true,
+    },
+    national_id:{
+        type: Number,
+        required: true,
+    },
+    guardian_name:{
+        type: String,
+        required: true,
+    },
+    jop:{
+        type: String,
+        required:true,
+    },
+    city:{
+        type:String,
+        required:true,
+    },
+    address:{
+        type: String,
+        required:true,
+    },
+    home_phone:{
+        type: Number,
+        required: true,
+    },
+    mobile:{
+        type: Number,
+        required:true,
+    },
+    school:{
+        type:String,
+        required:true,
+    },
+    fully_qualified:{
+        type:String,
+        required:true,
+    },
+    graduation_year:{
+        type:Number,
+        required:true,
+    },
+    role_of_qualification:{
+        type: String,
+        required:true,
+    },
+    total_score:{
+        type:Number,
+    },
+    department:{
         type:String,
         required: true,
-    }
-    ,gender:{
+    },
+    gender:{
         type:String,
         required: true,
-    }
-    ,email:{
+    },
+    email:{
         type:String,
         required: true,
-    }
-    ,level:{
+    },
+    level:{
         type:Number,
         required: true,
-    }
-    ,email:{
+    },
+    academic_email:{
         type:String,
         required: true,
-    }
-    ,password:{
+    },
+    password:{
         type:String,
         required: true,
     },

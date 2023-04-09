@@ -13,7 +13,23 @@ if (stu){
 }
   const stud = new student({
     _id: req.body.id,
-    name: req.body.name,
+    full_name: req.body.full_name,
+    country_of_nationality: req.body.country_of_nationality,
+    religion: req.body.religion,
+    date_of_birth: req.body.date_of_birth,
+    place_of_birth: req.body.place_of_birth,
+    national_id: req.body.national_id,
+    guardian_name: req.body.guardian_name,
+    jop: req.body.jop,
+    city: req.body.city,
+    address: req.body.address,
+    home_phone: req.body.home_phone,
+    mobile: req.body,mobile,
+    school: req.body.school,
+    fully_qualified: req.body.fully_qualified,
+    graduation_year: req.body.graduation_year,
+    role_of_qualification: req.body.role_of_qualification,
+    total_score: req.body.total_score,
     department: req.body.department,
     gender: req.body.gender,
     email: req.body.email,
@@ -21,8 +37,6 @@ if (stu){
     username: req.body.username,
     password: req.body.password,
     isStudent: req.body.isStudent,
-    currentcourses: req.body.currentcourses,
-    finishedcourses: req.body.finishedcourses,
 
   })
   const saltrounds = 10

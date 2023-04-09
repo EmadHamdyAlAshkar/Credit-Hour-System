@@ -26,4 +26,7 @@ router.use("/user",userrouter)
 import adminrouter from "./admin-router"
 router.use("/admin",adminrouter)
 
+import addexceluser from "../controlers/project/excel-controller"
+router.use ("/excel",addexceluser)
+
 export default router;
