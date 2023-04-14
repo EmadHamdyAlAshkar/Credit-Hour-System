@@ -39,13 +39,13 @@ async function getallstaff(req, res, next) {
         obj.gender = req.body.gender
     }
     const staffs = await staff.find(obj).all()
-    res.send(staffs)
+    res.json({data:staffs})
 }
 async function deletestaff(req, res, next) {
     const staffs = await staff.findOneAndDelete({
         _id: req.body.id
     })
-    res.send(staffs)
+    res.json({data:staffs})
 }
 async function updatestaff(req, res, next) {
     let obj = {}
@@ -62,7 +62,7 @@ async function updatestaff(req, res, next) {
     const staffs = await staff.findOneAndUpdate({
         _id: req.body.id
     }, obj)
-    res.send(staffs)
+    res.json({data:staffs})
 }
 
 
@@ -110,7 +110,7 @@ async function addstaff(req, res, next) {
             res.send(error)
         }
         else {
-            res.send(_.pick(staf, ['_id', 'name', 'email']))
+            res.json({data:staf})
         }
     });
 }

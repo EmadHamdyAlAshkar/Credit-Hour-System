@@ -39,7 +39,7 @@ async function getallinstructors(req, res, next) {
     obj.gender = req.body.gender
   }
   const instructors = await instructor.find(obj).populate("courses"," name -prerequisites -_id")
-  res.send(instructors)
+  res.json({data:instructors})
 }
 async function deleteinstructor(req, res, next) {
   const instructors = await instructor.findOneAndDelete({
@@ -62,7 +62,7 @@ async function updateinstructor(req, res, next) {
   const instructors = await instructor.findOneAndUpdate({
     _id: req.body.id
   }, obj)
-  res.send(instructors)
+  res.json({data:instructors})
 }
 async function enrollcourse(req, res) {
   let instrucorid = req.body.instrucorid
