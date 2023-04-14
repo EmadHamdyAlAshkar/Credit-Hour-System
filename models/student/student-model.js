@@ -6,108 +6,113 @@ import  Jwt  from "jsonwebtoken"
 const studentSchema=mongoose.Schema({
     _id:{
         type:Number,
-        required: true,
+        
+        
+        
     },
     full_name:{
         type:String,
-        required: true,
+        
 
     },
     country_of_nationality:{
         type: String,
-        required: true,
+        
     },
     religion:{
         type: String,
-        required: true,
+        
     },
     date_of_birth:{
         type: Number,
-        required: true,
+        
     },
     place_of_birth:{
         type: String,
-        required: true,
+        
     },
     national_id:{
         type: Number,
-        required: true,
+        
     },
     guardian_name:{
         type: String,
-        required: true,
+        
     },
     jop:{
         type: String,
-        required:true,
+        
     },
     city:{
         type:String,
-        required:true,
+        
     },
     address:{
         type: String,
-        required:true,
+        
     },
     home_phone:{
         type: Number,
-        required: true,
+        
     },
     mobile:{
         type: Number,
-        required:true,
+        
     },
     school:{
         type:String,
-        required:true,
+        
     },
     fully_qualified:{
         type:String,
-        required:true,
+        
     },
     graduation_year:{
         type:Number,
-        required:true,
+        
     },
     role_of_qualification:{
         type: String,
-        required:true,
+        
     },
     total_score:{
         type:Number,
     },
     department:{
         type:String,
-        required: true,
+        
     },
     gender:{
         type:String,
-        required: true,
+        
     },
     email:{
         type:String,
-        required: true,
+        
     },
     level:{
         type:Number,
-        required: true,
+        
     },
     academic_email:{
         type:String,
-        required: true,
+        
     },
     password:{
         type:String,
-        required: true,
+        
     },
     isStudent: {
         type: Boolean,
-        required: true,
+        
+    },
+    gpa:{
+        type:Number,
     },
     currentcourses:[
         {
             type:String,
-            required: true,
+            
             ref:"courses",
             autopopulate:{
                 select:"name"
@@ -117,7 +122,7 @@ const studentSchema=mongoose.Schema({
     finishedcourses:[
         {
             type:String,
-            required: true,
+            
             ref:"courses",
             autopopulate:{
                 select:"name"

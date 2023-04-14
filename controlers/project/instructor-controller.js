@@ -1,5 +1,6 @@
 import student from "../../models/student/student-model"
 import instructor from "../../models/instructor/instructor-model";
+import courses from "../../models/course/course-model"
 import { validationResult, matchedData } from 'express-validator'
 import multer from "../../helpers/Multer"
 import { response } from "express";
@@ -37,7 +38,7 @@ async function getallinstructors(req, res, next) {
   if ("gender" in req.body) {
     obj.gender = req.body.gender
   }
-  const instructors = await instructor.find(obj).all()
+  const instructors = await instructor.find(obj).populate("courses"," name -prerequisites -_id")
   res.send(instructors)
 }
 async function deleteinstructor(req, res, next) {
@@ -62,6 +63,38 @@ async function updateinstructor(req, res, next) {
     _id: req.body.id
   }, obj)
   res.send(instructors)
+}
+async function enrollcourse(req, res) {
+  let instrucorid = req.body.instrucorid
+  let courseid = req.body.courseid
+  let instruct = await instructor.findOne({
+    _id: instrucorid
+  }
+  )
+  let course = await courses.findOne({
+    _id: courseid
+  })
+  if (!instruct) {
+    return res.json({massage:"The instructor not found"})
+  }
+  if(!course){
+    return res.json({massage:"Course not found"})
+  }
+  else {
+    let reg = false
+    await Promise.all(instruct.courses.map(async (cours) => {
+      if (cours._id === courseid) {
+        reg = true
+      }
+    }))
+    if (reg) {
+      return res.json({message:"Course " + course.name + " already found in " + instruct.name + " courses"})
+    }
+  }
+  instruct.courses.push(courseid);
+  await instruct.save();
+  return res.json({status:"true",massage: "Course added",data:course})
+
 }
 
 /*
@@ -145,5 +178,6 @@ export default {
   createinstructor,
   getallinstructors,
   updateinstructor,
-  deleteinstructor
+  deleteinstructor,
+  enrollcourse,
 }

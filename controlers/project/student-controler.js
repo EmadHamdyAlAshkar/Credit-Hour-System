@@ -7,10 +7,10 @@ import bcrypt from "bcrypt"
 
 // create student
 async function createstudent(req, res, next) {
-let stu = await student.findById({_id : req.body.id})
-if (stu){
-  return res.json({message: "Student already exists"})
-}
+  let stu = await student.findById({ _id: req.body.id })
+  if (stu) {
+    return res.json({ message: "Student already exists" })
+  }
   const stud = new student({
     _id: req.body.id,
     full_name: req.body.full_name,
@@ -24,7 +24,7 @@ if (stu){
     city: req.body.city,
     address: req.body.address,
     home_phone: req.body.home_phone,
-    mobile: req.body,mobile,
+    mobile: req.body.mobile,
     school: req.body.school,
     fully_qualified: req.body.fully_qualified,
     graduation_year: req.body.graduation_year,
@@ -46,8 +46,8 @@ if (stu){
       res.send(error)
     }
     else {
-      res.json({status: "true",message : "Student saved"})
-      
+      res.json({ status: "true", message: "Student saved" })
+
     }
   });
 }
@@ -93,7 +93,7 @@ async function updatestudent(req, res, next) {
   }, obj)
   return res.send(students)
 }
-async function registercourse(req, res, next) {
+async function registercourse1(req, res, next) {
   let studid = req.body.studid
   let courseid = req.body.courseid
   let stud = await student.findOne({
@@ -103,7 +103,7 @@ async function registercourse(req, res, next) {
   let course = await courses.findOne({
     _id: courseid
   })
-  if(!stud){
+  if (!stud) {
     return res.status(404).send(`that student of id : ${studid} is not found!`)
   }
   if (course) {
@@ -126,7 +126,7 @@ async function registercourse(req, res, next) {
         return await res.status(405).send(`course :{ ${course.name} } is already registred !`)
       }
       else {
-        return await res.status(405).send(`course :{ ${course.name} } is already passed !`)
+        return await res.status(405).send(`course :{ ${course.pre} } is already passed !`)
       }
 
     }
@@ -148,21 +148,150 @@ async function registercourse(req, res, next) {
       let newcourse = stud.currentcourses
       newcourse.push(course)
       await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
-      
+
     }
     else {
-      if (course.prerequisites != 0) { return res.send(`course ${course.name} not found in your finished courses`) }
+      if (course.prerequisites != 0) { return res.json({ message: `course ${course.prerequisites} not found in your finished courses` }) }
       else {
-        
+
+        let newcourse = stud.currentcourses
+        newcourse.push(course)
+        await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
+      }
+    }
+
+    return res.send("course registered")
+  } else {
+    return res.status(404).send(`that course of id : ${courseid} is not found!`)
+  }
+}
+async function registercourse(req, res, next) {
+  let studid = req.body.studid
+  let courseid = req.body.courseid
+  let stud = await student.findOne({
+    _id: studid
+  })
+  let cors =[]
+  
+  cors = req.body.courseid.replace('[', '').replace(']', '').split(',')
+  let sum = 0
+  await Promise.all(cors.map(async(cours)=>{
+    let course = await  courses.findOne({
+      _id: cours
+    })
+    if (!stud) {
+      return res.send("that student of id : "+studid+" is not found!")
+    }
+    if(!course){
+     return res.send("Course "+cours+" not found")
+    }
+    
+  //   if (course.hours < maxCreditHours) {
+  //   console.log("max hours"+maxCreditHours);
+    
+    
+  //   return res.status(400).json({ message: `Subject credit hours exceed maximum credit hours for student (${maxCreditHours})` });
+  // }
+  else{
+    newcourse.push(course)
+  await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
+  }
+      sum = sum+course.hours
+  }))
+  
+  return res.send(cors[0]+" The sum of  registered hours = "+sum)
+  
+  let course = await courses.findOne({
+    _id: courseid
+  })
+  const maxCreditHours = calculateMaxCreditHours(stud.gpa);
+
+  
+
+  if (!stud) {
+    return res.status(404).send(`that student of id : ${studid} is not found!`)
+  }
+  if (course) {
+    let reg = false
+    await Promise.all(stud.currentcourses.map(async (cours) => {
+      if (cours._id === courseid) {
+        reg = true
+      }
+    }))
+
+    let finished = false
+    await Promise.all(stud.finishedcourses.map(async (cours) => {
+      if (cours._id === courseid) {
+        finished = true
+      }
+    }))
+    if (reg || finished) {
+      
+      console.log(`course :{ ${course.name} } is already registred !`);
+      if (reg) {
+        return await res.status(405).send(`course :{ ${course.name} } is already registred !`)
+      }
+      else {
+        return await res.status(405).send(`course :{ ${course.pre} } is already passed !`)
+      }
+      
+
+    }
+    let found = false
+    if (course.prerequisites.length != 0) {
+      await Promise.all(course.prerequisites.map((pre) => {
+        stud.finishedcourses.map((finished) => {
+          if (finished._id == pre._id) {
+            found = true
+            return
+          }
+        })
+        if (found == false) {
+          return
+        }
+      }))
+    }
+    if (found) {
+      let newcourse = stud.currentcourses
+      if (course.hours < maxCreditHours) {
+        console.log("max hours"+maxCreditHours);
+        let newmaxhours = maxCreditHours - course.hours
+        console.log(newmaxhours);
+        return res.status(400).json({ message: `Subject credit hours exceed maximum credit hours for student (${maxCreditHours})` });
+      }
+      else{
+        newcourse.push(course)
+      await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
+      }
+      
+
+    }
+    else {
+      if (course.prerequisites != 0) { return res.json({ message: `This course prerequisite is  not found in your finished courses` }) }
+      else {
+
         let newcourse = stud.finishedcourses
         newcourse.push(course)
         await student.findOneAndUpdate({ _id: studid }, { finishedcourses: newcourse })
       }
     }
-    
+
     return res.send("course registered")
   } else {
     return res.status(404).send(`that course of id : ${courseid} is not found!`)
+  }
+}
+function calculateMaxCreditHours(gpa) {
+  if (gpa <= 4 && gpa >= 3.5) {
+    return 20;
+  } else if (gpa <3.5  && gpa >= 3) {
+    return 15;
+  } else if (gpa < 3 && gpa >= 2.5) {
+    return 12;
+  } else if (gpa < 2.5 && gpa >= 2) {
+    return 9;
+  } else {
+    return 6;
   }
 }
 // async function registercourse(req, res, next) {
@@ -238,7 +367,7 @@ async function enrollcourse(req, res) {
   //   res.send("Hello")
   // }
   const { studentId, courseId } = req.body;
-  const stud = await student.findById(studentId);
+  const stud = await student.findById(studentId).populate('currentcourses')
   if (!stud) {
     return res.status(404).json({ msg: 'Student not found' });
   }
@@ -248,7 +377,8 @@ async function enrollcourse(req, res) {
     return res.status(404).json({ msg: 'Subject not found' });
   }
   let check = stud.currentcourses.includes(cours)
-  if (check) {
+  if (stud.currentcourses.includes(cours)) {
+    console.log("here");
     return res.status(400).json({ msg: 'Student already enrolled in this subject' });
   }
   stud.currentcourses.push(courseId);
@@ -378,5 +508,6 @@ export default {
   deletestudent,
   registercourse,
   getonestudent,
-  enrollcourse
+  enrollcourse,
+  registercourse1
 }

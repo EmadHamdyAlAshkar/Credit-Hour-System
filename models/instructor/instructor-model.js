@@ -32,6 +32,14 @@ const instructorSchema=mongoose.Schema({
     ,isInstructor:{
         type: Boolean,
     }
+    ,courses:[
+        {
+            type:String,
+            
+            ref:"courses",
+            
+        }
+    ],
     
 },{ timestamps: true
     , versionKey: false

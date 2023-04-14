@@ -43,7 +43,7 @@ async function getallcourse(req, res, next) {
     }
     
     const courses = await course.find(obj).all()
-    res.send(courses)
+    res.json({data :courses})
 }
 async function deletecourse(req, res, next) {
     const courses = await course.findOneAndDelete({
