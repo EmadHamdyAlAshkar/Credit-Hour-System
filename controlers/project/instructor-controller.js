@@ -62,7 +62,7 @@ async function updateinstructor(req, res, next) {
   const instructors = await instructor.findOneAndUpdate({
     _id: req.body.id
   }, obj)
-  res.json({data:instructors})
+  res.send(instructors)
 }
 async function enrollcourse(req, res) {
   let instrucorid = req.body.instrucorid
@@ -83,7 +83,8 @@ async function enrollcourse(req, res) {
   else {
     let reg = false
     await Promise.all(instruct.courses.map(async (cours) => {
-      if (cours._id === courseid) {
+      console.log(cours);
+      if (cours === courseid) {
         reg = true
       }
     }))
