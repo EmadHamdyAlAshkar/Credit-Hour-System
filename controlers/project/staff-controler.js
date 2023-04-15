@@ -39,7 +39,8 @@ async function getallstaff(req, res, next) {
         obj.gender = req.body.gender
     }
     const staffs = await staff.find(obj).all()
-    res.json({data :staffs})
+    res.json({data :staffs
+    })
 }
 async function deletestaff(req, res, next) {
     const staffs = await staff.findOneAndDelete({
