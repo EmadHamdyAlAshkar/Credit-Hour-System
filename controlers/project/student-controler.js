@@ -59,6 +59,28 @@ async function getonestudent(req, res) {
   res.send(stud)
 
 }
+async function getstudentsbycourse(req,res){
+  const courseid = req.body.courseid
+  const students = await student.find({currentcourses: courseid}).select("name -currentcourses -finishedcourses")
+  return res.json({data:students})
+
+}
+// getting student by course id
+async function getStudentsByCoursesId(req, res, next) {
+  const courseName = req.body.courseName;
+
+  
+    const course = await courses.findOne({ name: courseName });
+    const studentt = await student.find({ currentcourses: course }).select("name -currentcourses -finishedcourses")
+
+    return res.json({data:studentt})
+    // const courseId = courses._id;
+
+    const students = await student.find({ currentcourses: courseId });
+ 
+   res.json({data:course});
+}
+ 
 async function getallstudents(req, res, next) {
   let obj = {}
   if ("name" in req.body) {
@@ -509,5 +531,7 @@ export default {
   registercourse,
   getonestudent,
   enrollcourse,
-  registercourse1
+  registercourse1,
+  getstudentsbycourse,
+  getStudentsByCoursesId
 }

@@ -17,5 +17,8 @@ router.post('/registercourse',student_conltroler.registercourse)
 router.post('/registercourse1',student_conltroler.registercourse1)
 router.post('/enrollcourse',student_conltroler.enrollcourse)
 router.post('/registercoursetest',registerConrtroller.registercoursetest)
+router.get('/getstudentsbycourse',student_conltroler.getstudentsbycourse)
+router.get('/getStudentsByCoursesId',student_conltroler.getStudentsByCoursesId)
+
 
 export default router;

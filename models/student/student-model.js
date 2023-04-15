@@ -115,8 +115,9 @@ const studentSchema=mongoose.Schema({
             
             ref:"courses",
             autopopulate:{
-                select:"name"
+                select:"_id"
             }
+            
         }
     ],
     finishedcourses:[
