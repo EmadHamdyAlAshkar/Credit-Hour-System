@@ -15,17 +15,18 @@ router.get('/profile',auth,async (req,res)=>{
     const instructorprofile = await instructor.findById(req.user._id).populate("courses","name -_id -prerequisites ").select('-password')
    
     if(staffprofile){
-       return res.send(staffprofile)
-    }
-    else if(userprofile){
-       return res.send(userprofile)
-    }
-    else if(studentprofile){
-        return res.send(studentprofile)
-     }
-     else if(instructorprofile){
-      return res.send(instructorprofile)
+      res.json({data :staffprofile})
+  }
+  else if(userprofile){
+     return  res.json({data :userprofile})
+     
+  }
+  else if(studentprofile){
+      return res.json({data :studentprofile})
    }
+   else if(instructorprofile){
+    return res.json({data :instructorprofile})
+   }
     
     res.send("No profile founded")
 
