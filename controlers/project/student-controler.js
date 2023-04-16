@@ -59,28 +59,28 @@ async function getonestudent(req, res) {
   res.send(stud)
 
 }
-async function getstudentsbycourse(req,res){
+async function getstudentsbycourse(req, res) {
   const courseid = req.body.courseid
-  const students = await student.find({currentcourses: courseid}).select("name -currentcourses -finishedcourses")
-  return res.json({data:students})
+  const students = await student.find({ currentcourses: courseid }).select("name -currentcourses -finishedcourses")
+  return res.json({ data: students })
 
 }
 // getting student by course id
 async function getStudentsByCoursesId(req, res, next) {
   const courseName = req.body.courseName;
 
-  
-    const course = await courses.findOne({ name: courseName });
-    const studentt = await student.find({ currentcourses: course }).select("name -currentcourses -finishedcourses")
 
-    return res.json({data:studentt})
-    // const courseId = courses._id;
+  const course = await courses.findOne({ name: courseName });
+  const studentt = await student.find({ currentcourses: course }).select("name -currentcourses -finishedcourses")
 
-    const students = await student.find({ currentcourses: courseId });
- 
-   res.json({data:course});
+  return res.json({ data: studentt })
+  // const courseId = courses._id;
+
+  const students = await student.find({ currentcourses: courseId });
+
+  res.json({ data: course });
 }
- 
+
 async function getallstudents(req, res, next) {
   let obj = {}
   if ("name" in req.body) {
@@ -193,42 +193,42 @@ async function registercourse(req, res, next) {
   let stud = await student.findOne({
     _id: studid
   })
-  let cors =[]
-  
+  let cors = []
+
   cors = req.body.courseid.replace('[', '').replace(']', '').split(',')
   let sum = 0
-  await Promise.all(cors.map(async(cours)=>{
-    let course = await  courses.findOne({
+  await Promise.all(cors.map(async (cours) => {
+    let course = await courses.findOne({
       _id: cours
     })
     if (!stud) {
-      return res.send("that student of id : "+studid+" is not found!")
+      return res.send("that student of id : " + studid + " is not found!")
     }
-    if(!course){
-     return res.send("Course "+cours+" not found")
+    if (!course) {
+      return res.send("Course " + cours + " not found")
     }
-    
-  //   if (course.hours < maxCreditHours) {
-  //   console.log("max hours"+maxCreditHours);
-    
-    
-  //   return res.status(400).json({ message: `Subject credit hours exceed maximum credit hours for student (${maxCreditHours})` });
-  // }
-  else{
-    newcourse.push(course)
-  await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
-  }
-      sum = sum+course.hours
+
+    //   if (course.hours < maxCreditHours) {
+    //   console.log("max hours"+maxCreditHours);
+
+
+    //   return res.status(400).json({ message: `Subject credit hours exceed maximum credit hours for student (${maxCreditHours})` });
+    // }
+    else {
+      newcourse.push(course)
+      await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
+    }
+    sum = sum + course.hours
   }))
-  
-  return res.send(cors[0]+" The sum of  registered hours = "+sum)
-  
+
+  return res.send(cors[0] + " The sum of  registered hours = " + sum)
+
   let course = await courses.findOne({
     _id: courseid
   })
   const maxCreditHours = calculateMaxCreditHours(stud.gpa);
 
-  
+
 
   if (!stud) {
     return res.status(404).send(`that student of id : ${studid} is not found!`)
@@ -248,7 +248,7 @@ async function registercourse(req, res, next) {
       }
     }))
     if (reg || finished) {
-      
+
       console.log(`course :{ ${course.name} } is already registred !`);
       if (reg) {
         return await res.status(405).send(`course :{ ${course.name} } is already registred !`)
@@ -256,7 +256,7 @@ async function registercourse(req, res, next) {
       else {
         return await res.status(405).send(`course :{ ${course.pre} } is already passed !`)
       }
-      
+
 
     }
     let found = false
@@ -276,16 +276,16 @@ async function registercourse(req, res, next) {
     if (found) {
       let newcourse = stud.currentcourses
       if (course.hours < maxCreditHours) {
-        console.log("max hours"+maxCreditHours);
+        console.log("max hours" + maxCreditHours);
         let newmaxhours = maxCreditHours - course.hours
         console.log(newmaxhours);
         return res.status(400).json({ message: `Subject credit hours exceed maximum credit hours for student (${maxCreditHours})` });
       }
-      else{
+      else {
         newcourse.push(course)
-      await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
+        await student.findOneAndUpdate({ _id: studid }, { currentcourses: newcourse })
       }
-      
+
 
     }
     else {
@@ -306,7 +306,7 @@ async function registercourse(req, res, next) {
 function calculateMaxCreditHours(gpa) {
   if (gpa <= 4 && gpa >= 3.5) {
     return 20;
-  } else if (gpa <3.5  && gpa >= 3) {
+  } else if (gpa < 3.5 && gpa >= 3) {
     return 15;
   } else if (gpa < 3 && gpa >= 2.5) {
     return 12;
