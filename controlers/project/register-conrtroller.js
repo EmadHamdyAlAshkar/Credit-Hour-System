@@ -31,7 +31,7 @@ async function registercoursetest(req, res, next) {
       let finished = false
       await Promise.all(stud.finishedcourses.map(async (finshdcourse) => {
         if (finshdcourse._id == cours) {
-          console.log("hrwwe");
+          console.log("hrwwwe");
 
           finished = true
         }
