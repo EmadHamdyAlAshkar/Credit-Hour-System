@@ -38,6 +38,7 @@ async function createstudent(req, res, next) {
     username: req.body.username,
     password: req.body.password,
     isStudent: req.body.isStudent,
+    gpa: req.body.gpa,
 
   })
   const saltrounds = 10
@@ -71,6 +72,20 @@ async function getStudentsByCoursesId(req, res, next) {
   // const courseName = req.body.courseName;
 
 const courseName ="Maths 2"
+const studid = req.body.studid
+const stud = await student.findOne({_id:studid})
+
+let availablecourses
+await Promise.all(stud.finishedcourses.map(async(finished)=>{
+   availablecourses = await courses.find({ prerequisites :finished})
+   
+
+}))
+let availablecourses1 = await courses.find({ prerequisites :stud.finishedcourses})
+
+
+const fin = stud.finishedcourses.name
+
 
   const course = await courses.findOne({ name: courseName });
   const studentt = await student.find({ currentcourses: course }).select("name -currentcourses -finishedcourses ")
@@ -93,7 +108,8 @@ res.setHeader('Content-Disposition', 'attachment; filename=' + courseName+" stud
 console.log("studentt"+studentt);
 console.log("****************");
 console.log(data);
-  res.send(fileBuffer)
+console.log(availablecourses.length);
+  res.json(availablecourses)
 // return res.json({data:{ students: studentt }})
 
 }catch(err) {
@@ -157,15 +173,23 @@ async function registercourse1(req, res, next) {
   }
   if (course) {
     let reg = false
+    console.log("course");
+
     await Promise.all(stud.currentcourses.map(async (cours) => {
       if (cours._id == courseid) {
+        console.log("registered");
+
         reg = true
+        
+
       }
     }))
 
     let finished = false
     await Promise.all(stud.finishedcourses.map(async (cours) => {
       if (cours._id == courseid) {
+        console.log("finished");
+
         finished = true
       }
     }))

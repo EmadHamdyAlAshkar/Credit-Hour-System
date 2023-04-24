@@ -109,6 +109,17 @@ const studentSchema=mongoose.Schema({
     gpa:{
         type:Number,
     },
+    hoursused:{
+        type: Number
+    },
+    remaininghourse:{
+        type: Number,
+        default : 125
+    },
+    avilablecredit:{
+        type: Number,
+        default : 12
+    },
     currentcourses:[
         {
             type:String,

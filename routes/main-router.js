@@ -29,4 +29,10 @@ router.use("/admin",adminrouter)
 import addexceluser from "../controlers/project/excel-controller"
 router.use ("/excel",addexceluser)
 
+import requestrouter from "./request-router"
+router.use("/request",requestrouter)
+
+import setcridet from "./set-cridet-router"
+router.use("/setcridet",setcridet)
+
 export default router;
