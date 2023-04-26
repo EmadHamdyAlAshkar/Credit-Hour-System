@@ -5,9 +5,9 @@ import Jwt from "jsonwebtoken"
 
 const requestSchema = mongoose.Schema({
 
-    _id:{type:Number}
+    _id:{type:String}
     ,studentcode: {
-        type: String,
+        type: Number,
 
         ref: "students",
         autopopulate: {
@@ -28,7 +28,7 @@ const requestSchema = mongoose.Schema({
     ],
     status:{
         type:String,
-        enum:["Accepted","Rejected","Pending"]
+        enum:["accepted","rejected","pending"]
     }
 
 }, {

@@ -116,7 +116,7 @@ const studentSchema=mongoose.Schema({
         type: Number,
         default : 125
     },
-    avilablecredit:{
+    availablecredit:{
         type: Number,
         default : 12
     },
