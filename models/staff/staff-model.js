@@ -22,7 +22,7 @@ const staffSchema = mongoose.Schema({
         unique: true,
     }
     ,mobile:{
-        type:Number,
+        type:String,
     }
     ,username:{
         type:String,

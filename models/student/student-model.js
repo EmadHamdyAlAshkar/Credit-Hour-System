@@ -56,7 +56,7 @@ const studentSchema=mongoose.Schema({
         
     },
     mobile:{
-        type: Number,
+        type: String,
         
     },
     school:{
