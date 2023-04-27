@@ -27,10 +27,7 @@ console.log(stud.availablecredit);
     return await res.json({ message: "The requested courses hours exceeds your available cridet" })
   }
 
-console.log("before save");
-  stud.availablecredit = stud.availablecredit-sumofrequested
-  await stud.save()
-  console.log("after save");
+
 
 
   if (!stud) {
@@ -45,7 +42,7 @@ console.log("before save");
     }
   }
   if (courseFound) {
-    return res.status(405).send({ message: "This course: " + courseFound + " is not found " })
+    return res.status(405).json({ message: "This course: " + courseFound + " is not found " })
   }
 
   // if course in current courses
@@ -60,7 +57,7 @@ console.log("before save");
       }
     }
     if (registered) {
-      return await res.status(405).send({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already registered " })
+      return await res.status(405).json({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already registered " })
     }
   }
 
@@ -80,7 +77,7 @@ console.log("before save");
       }
     }
     if (finished) {
-      return await res.status(405).send({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already passed " })
+      return await res.status(405).json({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already passed " })
     }
   }
 
@@ -113,7 +110,7 @@ console.log("before save");
         break
     }
     if (!foundprerequisite) {
-      return await res.status(405).send({ message: "you didn't pass this course: " + coursessss._id + " prerequisite" })
+      return await res.status(405).json({ message: "you didn't pass this course: " + coursessss._id + " prerequisite" })
     }
   }
 
@@ -123,6 +120,11 @@ console.log("before save");
   if (requestid) {
     return await res.json({ message: "These courses is already requested" })
   }
+
+  console.log("before save");
+  stud.availablecredit = stud.availablecredit-sumofrequested
+  await stud.save()
+  console.log("after save");
   
   const requs = new request({
     _id: studid + " : " + cors,
@@ -180,7 +182,7 @@ async function approveregistration(req, res) {
         }
       }
       if (registered) {
-        return await res.status(405).send({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already registered " })
+        return await res.status(405).json({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already registered " })
       }
     }
 
@@ -196,7 +198,7 @@ async function approveregistration(req, res) {
         }
       }
       if (finished) {
-        return await res.status(405).send({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already passed " })
+        return await res.status(405).json({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already passed " })
       }
     }
 

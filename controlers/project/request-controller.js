@@ -21,9 +21,39 @@ async function createrequest(req, res, next) {
       }
     });
   }
+  // .select("_id  -finishedcourses -currentcourses")
+
+  async function getallrequests(req, res, next) {
+    let studid = req.body.studid
+    let reques = await request.find({studentcode : studid})
+    const requests = await request.find().populate('studentcode','_id name -finishedcourses -currentcourses').populate('requestedcourses','_id name -prerequisites')
+    if(!studid){
+      return await res.json({data:requests})
+
+    }
+    if (reques.length==0) {
+      return await res.json({message:"No requests founded"})
+    }
+    res.json({data:reques})
+  }
+
+  async function getrequestbystudentid(req, res) {
+    let obj = {}
+    if ("name" in req.body) {
+      obj.name = { $regex: req.body.name }
+    }
+    if ("gender" in req.body) {
+      obj.gender = req.body.gender
+    }
+    const requests = await request.find().populate('studentcode','_id name -finishedcourses -currentcourses').populate('requestedcourses','_id name -prerequisites')
+    res.json({data:requests})
+  
+  }
 
 
   export default{
-    createrequest
+    createrequest,
+    getallrequests,
+    getrequestbystudentid
 
   }

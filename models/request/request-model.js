@@ -10,9 +10,9 @@ const requestSchema = mongoose.Schema({
         type: Number,
 
         ref: "students",
-        autopopulate: {
-            select: "name"
-        }
+        // autopopulate: {
+        //     select: "name"
+        // }
 
     }
     ,
@@ -21,9 +21,9 @@ const requestSchema = mongoose.Schema({
             type: String,
 
             ref: "courses",
-            autopopulate: {
-                select: "name"
-            }
+            // autopopulate: {
+            //     select: "name"
+            // }
         }
     ],
     status:{
