@@ -58,7 +58,7 @@ async function getonestudent(req, res) {
   if (!stud) {
     return res.send("Student not found")
   }
-  res.json({data:stud})
+  res.json({ data: stud })
 
 }
 async function getstudentsbycourse(req, res) {
@@ -71,15 +71,15 @@ async function getstudentsbycourse(req, res) {
 async function getStudentsByCoursesId(req, res, next) {
   const courseName = req.body.courseName;
 
-  
-    const course = await courses.findOne({ name: courseName });
-    const studentt = await student.find({ currentcourses: course }).select("name -currentcourses -finishedcourses")
 
-    return res.json({data:{ students: studentt }})
-    // const courseId = courses._id;
+  const course = await courses.findOne({ name: courseName });
+  const studentt = await student.find({ currentcourses: course }).select("name -currentcourses -finishedcourses")
+
+  return res.json({ data: { students: studentt } })
+  // const courseId = courses._id;
 
   //   const students = await student.find({ currentcourses: courseId });
- 
+
   //  res.json({data:course});
 }
 async function getallstudents(req, res, next) {
@@ -91,7 +91,7 @@ async function getallstudents(req, res, next) {
     obj.gender = req.body.gender
   }
   const students = await student.find(obj).all()
-  res.json({data:students})
+  res.json({ data: students })
 }
 async function deletestudent(req, res, next) {
   const students = await student.findOneAndDelete({
@@ -116,6 +116,104 @@ async function updatestudent(req, res, next) {
   }, obj)
   return res.send(students)
 }
+
+async function getavailablecourses(req, res) {
+  const studid = req.body.studid
+  const stud = await student.findOne({ _id: studid })
+  let availablecourses1 = await courses.find({ prerequisites: stud.finishedcourses })
+
+
+  let availablecourses
+  let avail = await Promise.all(stud.finishedcourses.map(async (finished) => {
+    availablecourses = await courses.find({ prerequisites: finished }).select("name hours -prerequisites ")
+    // if (availablecourses.length == 0) {
+    //   availablecourses = "No dependencies"
+    // }
+    // console.log((availablecourses));
+    // // if (available == finished) {
+    // //   available = "Ignore"
+    // //   return available
+    // // }
+
+
+    // console.log("finished***********"+finished);
+
+
+
+    return availablecourses
+
+
+  }))
+
+  // console.log("length------------------"+avail.length);
+  let found = []
+
+  for (let availablecoursesss of avail) {
+    // console.log("length------------------"+availablecoursesss.length);
+    for (let avaaaal of availablecoursesss) {
+
+      // console.log("avaaaaal*************"+avaaaal);
+
+
+      found.push(avaaaal)
+      // console.log("found*********"+found);
+
+
+
+
+    }
+  }
+  // console.log("found*********"+found);
+
+  // const noprerequisite = await courses.find({prerequisites.length: 0})
+  // avail = avail-stud.finishedcourses
+  // console.log(avail);
+  let finished = []
+  let required = []
+  for (let founded of found) {
+    for (let finish of stud.finishedcourses) {
+      // console.log("finish********"+finish);
+      // console.log("founded-----------"+founded);
+      if (founded._id == finish._id) {
+        finished.push(finish)
+      }
+
+
+    }
+    
+  }
+
+
+  for(let finish of finished){
+    for(let founded of found){
+      if(founded._id == finish._id){
+        let ind = found.indexOf(founded)
+        found.splice(ind,1)
+
+      }
+    }
+  }
+
+
+
+
+
+  console.log("found******"  +found.length);
+  console.log("finished******" + finished.length);
+  
+ 
+    
+  
+
+    console.log("length------------------" + found.length);
+
+  res.json({ data: {found:found},finished:finished })
+
+
+
+
+}
+
 async function registercourse1(req, res, next) {
   let studid = req.body.studid
   let courseid = req.body.courseid
@@ -138,7 +236,7 @@ async function registercourse1(req, res, next) {
         console.log("registered");
 
         reg = true
-        
+
 
       }
     }))
@@ -542,5 +640,6 @@ export default {
   enrollcourse,
   registercourse1,
   getstudentsbycourse,
-  getStudentsByCoursesId
+  getStudentsByCoursesId,
+  getavailablecourses
 }

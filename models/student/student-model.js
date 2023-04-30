@@ -24,7 +24,7 @@ const studentSchema=mongoose.Schema({
         
     },
     date_of_birth:{
-        type: Number,
+        type: String,
         
     },
     place_of_birth:{

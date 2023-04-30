@@ -8,8 +8,8 @@ async function setcridet(req, res) {
     
     students.forEach(async (student) => {
       const credit = calculateMaxCreditHours(student.gpa); 
-      student.avilablecredit = credit; 
-      console.log(student.avilablecredit);
+      student.availablecredit = credit; 
+      console.log(student.availablecredit);
       await student.save(); 
       console.log("saved");
     });

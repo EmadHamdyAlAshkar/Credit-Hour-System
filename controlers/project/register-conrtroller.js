@@ -121,10 +121,7 @@ console.log(stud.availablecredit);
     return await res.json({ message: "These courses is already requested" })
   }
 
-  console.log("before save");
-  stud.availablecredit = stud.availablecredit-sumofrequested
-  await stud.save()
-  console.log("after save");
+
   
   const requs = new request({
     _id: studid + " : " + cors,
@@ -157,6 +154,13 @@ async function approveregistration(req, res) {
   if (!reques) {
     return await res.json({ message: "Request not found" })
   }
+  let sumofrequested = 0
+   await Promise.all(reques.requestedcourses.map(async (cours) => {
+    let course = await courses.findOne({_id: cours})
+    sumofrequested = sumofrequested + course.hours
+    return sumofrequested
+
+  }))
 
   if (statusbody == "accepted") {
 
@@ -207,7 +211,10 @@ async function approveregistration(req, res) {
       stud.currentcourses.push(cours)
     }
     await stud.save()
-
+    console.log("before save");
+    stud.availablecredit = stud.availablecredit-sumofrequested
+    await stud.save()
+    console.log("after save");
     //change request status to accepted
     reques.status = "accepted"
     await reques.save()
@@ -233,6 +240,7 @@ async function approveregistration(req, res) {
     //return message if req.body doesn't have (accepted) or (rejected)
     return await res.json({ message: "Please enter (accepted) or (rejected)" })
   }
+  
 
   res.json({ Message: "End" })
 }

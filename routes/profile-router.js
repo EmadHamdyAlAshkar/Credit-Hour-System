@@ -15,7 +15,7 @@ router.get('/profile',auth,async (req,res)=>{
     const instructorprofile = await instructor.findById(req.user._id).populate("courses","name -_id -prerequisites ").select('-password')
    
     if(staffprofile){
-      res.json({data :staffprofile})
+      return res.json({data :staffprofile})
   }
   else if(userprofile){
      return  res.json({data :userprofile})
