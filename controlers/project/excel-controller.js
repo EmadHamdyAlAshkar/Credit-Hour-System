@@ -18,7 +18,7 @@ router.post('/students/upload', upload.single('file'), (req, res) => {
   
   const hashedData = data.map((student) => ({
     ...student,
-    password: bcrypt.hashSync(student.password, 10),
+    password: bcrypt.hashSync(student.password.toString(), 10),
   }));
 
   // Add student data to MongoDB

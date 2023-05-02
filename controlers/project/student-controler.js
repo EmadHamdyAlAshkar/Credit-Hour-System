@@ -14,23 +14,23 @@ async function createstudent(req, res, next) {
   }
   const stud = new student({
     _id: req.body.id,
-    full_name: req.body.full_name,
-    country_of_nationality: req.body.country_of_nationality,
+    full_name: req.body.fullname,
+    country_of_nationality: req.body.countryofnationality,
     religion: req.body.religion,
-    date_of_birth: req.body.date_of_birth,
-    place_of_birth: req.body.place_of_birth,
-    national_id: req.body.national_id,
-    guardian_name: req.body.guardian_name,
+    date_of_birth: req.body.dateofbirth,
+    place_of_birth: req.body.placeofbirth,
+    national_id: req.body.nationalid,
+    guardian_name: req.body.guardianname,
     jop: req.body.jop,
     city: req.body.city,
     address: req.body.address,
-    home_phone: req.body.home_phone,
+    home_phone: req.body.homephone,
     mobile: req.body.mobile,
     school: req.body.school,
-    fully_qualified: req.body.fully_qualified,
-    graduation_year: req.body.graduation_year,
-    role_of_qualification: req.body.role_of_qualification,
-    total_score: req.body.total_score,
+    fully_qualified: req.body.fullyqualified,
+    graduation_year: req.body.graduationyear,
+    role_of_qualification: req.body.roleofqualification,
+    total_score: req.body.totalscore,
     department: req.body.department,
     gender: req.body.gender,
     email: req.body.email,
@@ -120,94 +120,40 @@ async function updatestudent(req, res, next) {
 async function getavailablecourses(req, res) {
   const studid = req.body.studid
   const stud = await student.findOne({ _id: studid })
-  let availablecourses1 = await courses.find({ prerequisites: stud.finishedcourses })
-
 
   let availablecourses
   let avail = await Promise.all(stud.finishedcourses.map(async (finished) => {
     availablecourses = await courses.find({ prerequisites: finished }).select("name hours -prerequisites ")
-    // if (availablecourses.length == 0) {
-    //   availablecourses = "No dependencies"
-    // }
-    // console.log((availablecourses));
-    // // if (available == finished) {
-    // //   available = "Ignore"
-    // //   return available
-    // // }
-
-
-    // console.log("finished***********"+finished);
-
-
-
     return availablecourses
-
-
   }))
 
-  // console.log("length------------------"+avail.length);
   let found = []
-
   for (let availablecoursesss of avail) {
-    // console.log("length------------------"+availablecoursesss.length);
     for (let avaaaal of availablecoursesss) {
 
-      // console.log("avaaaaal*************"+avaaaal);
-
-
       found.push(avaaaal)
-      // console.log("found*********"+found);
-
-
-
-
     }
   }
-  // console.log("found*********"+found);
 
-  // const noprerequisite = await courses.find({prerequisites.length: 0})
-  // avail = avail-stud.finishedcourses
-  // console.log(avail);
   let finished = []
-  let required = []
   for (let founded of found) {
     for (let finish of stud.finishedcourses) {
-      // console.log("finish********"+finish);
-      // console.log("founded-----------"+founded);
       if (founded._id == finish._id) {
         finished.push(finish)
       }
-
-
     }
-    
   }
-
 
   for(let finish of finished){
     for(let founded of found){
       if(founded._id == finish._id){
         let ind = found.indexOf(founded)
         found.splice(ind,1)
-
       }
     }
   }
 
-
-
-
-
-  console.log("found******"  +found.length);
-  console.log("finished******" + finished.length);
-  
- 
-    
-  
-
-    console.log("length------------------" + found.length);
-
-  res.json({ data: {found:found},finished:finished })
+  res.json({ data:found})
 
 
 

@@ -9,13 +9,14 @@ async function registercoursetest(req, res, next) {
   let studid = req.body.studid
   let stud = await student.findOne({ _id: studid })
   let cors = []
-  cors = req.body.courseid.replace('[', '').replace(']', '').split(',')
+  cors = req.body.courseid.replace('[', '').replace(']', '').split(', ')
   
   
 
   let sumofrequested = 0
    await Promise.all(cors.map(async (cours) => {
     let course = await courses.findOne({_id: cours})
+    console.log(course);
     sumofrequested = sumofrequested + course.hours
     return sumofrequested
 
@@ -26,9 +27,6 @@ console.log(stud.availablecredit);
     console.log("Your available credit is less than requested courses credit");
     return await res.json({ message: "The requested courses hours exceeds your available cridet" })
   }
-
-
-
 
   if (!stud) {
     return await res.json({ message: "that student of id : " + studid + " is not found!" })
@@ -61,8 +59,6 @@ console.log(stud.availablecredit);
     }
   }
 
-
-
   // if course in finished courses
   let finished = false
   for (let cours of cors) {
@@ -80,10 +76,6 @@ console.log(stud.availablecredit);
       return await res.status(405).json({ message: "This course: " + coursessss.name + " of code: " + coursessss._id + " is already passed " })
     }
   }
-
-
-
-
 
   // if course in pre courses
   let foundprerequisite = false
@@ -116,13 +108,10 @@ console.log(stud.availablecredit);
 
   const requestid = await request.findOne({ _id: studid + " : " + cors })
 
-
   if (requestid) {
     return await res.json({ message: "These courses is already requested" })
   }
 
-
-  
   const requs = new request({
     _id: studid + " : " + cors,
     studentcode: studid,
@@ -131,15 +120,7 @@ console.log(stud.availablecredit);
 
   })
   await requs.save();
-
-  // for (let cours of cors) {
-  //   stud.currentcourses.push(cours)
-  // }
-  // await stud.save()
-
-
   return await res.json({ message: "Pending request is sent to admin" })
-
 
 }
 

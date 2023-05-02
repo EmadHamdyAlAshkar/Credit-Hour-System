@@ -9,11 +9,6 @@ const requestSchema = mongoose.Schema({
     ,studentcode: {
         type: Number,
 
-        ref: "students",
-        // autopopulate: {
-        //     select: "name"
-        // }
-
     }
     ,
     requestedcourses: [

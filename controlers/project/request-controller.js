@@ -37,6 +37,17 @@ async function createrequest(req, res, next) {
     res.json({data:reques})
   }
 
+
+  async function getpendingrequests(req,res){
+    const requests = await request.find({status:"pending"}).populate('studentcode','_id name -finishedcourses -currentcourses').populate('requestedcourses','_id name -prerequisites')
+    
+    if(requests.length==0){
+      return res.json({message:"No pending requests"})
+    }
+    res.json({data:requests})
+
+  }
+
   async function getrequestbystudentid(req, res) {
     let obj = {}
     if ("name" in req.body) {
@@ -54,6 +65,7 @@ async function createrequest(req, res, next) {
   export default{
     createrequest,
     getallrequests,
-    getrequestbystudentid
+    getrequestbystudentid,
+    getpendingrequests
 
   }

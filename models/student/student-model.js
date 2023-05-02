@@ -1,18 +1,13 @@
 import mongoose from "mongoose";
 import autopopulate from "mongoose-autopopulate"
-// const Joi = require('Joi');
 import  Jwt  from "jsonwebtoken"
 
 const studentSchema=mongoose.Schema({
     _id:{
         type:Number,
-        
-        
-        
     },
     full_name:{
         type:String,
-        
 
     },
     country_of_nationality:{
@@ -105,9 +100,11 @@ const studentSchema=mongoose.Schema({
     isStudent: {
         type: Boolean,
         
+        
     },
     gpa:{
         type:Number,
+        
     },
     hoursused:{
         type: Number

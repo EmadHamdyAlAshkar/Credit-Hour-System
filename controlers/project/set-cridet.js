@@ -9,6 +9,7 @@ async function setcridet(req, res) {
     students.forEach(async (student) => {
       const credit = calculateMaxCreditHours(student.gpa); 
       student.availablecredit = credit; 
+      student.full_name = "Omda"
       console.log(student.availablecredit);
       await student.save(); 
       console.log("saved");
