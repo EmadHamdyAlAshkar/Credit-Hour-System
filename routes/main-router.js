@@ -35,4 +35,7 @@ router.use("/request",requestrouter)
 import setcridet from "./set-cridet-router"
 router.use("/setcridet",setcridet)
 
+import StudentCourseGrade from "./StudentCourseGrade-router"
+router.use("/",StudentCourseGrade)
+
 export default router;
