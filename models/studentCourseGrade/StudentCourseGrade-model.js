@@ -16,6 +16,9 @@ const StudentCourseGradeSchema  = mongoose.Schema({
       course: {
         type: String,
         ref: 'courses',
+        autopopulate:{
+          select:"_id"
+      }
         
       },
       midtermGrade: Number,

@@ -138,6 +138,13 @@ const studentSchema=mongoose.Schema({
             }
         }
     ],
+    coursesgrades:[
+        {
+            type: ObjectId,
+            ref:"StudentCourseGrade",
+            
+        }
+    ]
     
 },{ timestamps: true
     , versionKey: false
@@ -171,6 +178,7 @@ studentSchema.methods.generateTokens = function () {
 
 studentSchema.plugin(autopopulate)
 import checkQuery from '../../plugins/checkQuery'
+import { ObjectId } from "mongodb";
 studentSchema.plugin(checkQuery)
 const student=mongoose.model('students',studentSchema);
 export default student;

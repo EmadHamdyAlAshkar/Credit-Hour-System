@@ -90,7 +90,7 @@ async function getallstudents(req, res, next) {
   if ("gender" in req.body) {
     obj.gender = req.body.gender
   }
-  const students = await student.find(obj).all()
+  const students = await student.find(obj).all().
   res.json({ data: students })
 }
 async function deletestudent(req, res, next) {

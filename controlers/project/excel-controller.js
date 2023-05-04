@@ -155,7 +155,7 @@ router.post('/grades/final',upload.single('file'),async (req, res) => {
 
 router.post('/calculatetotalgrade',async (req,res)=>{
   const studgrades = await StudentCourseGrade.find()
-  studgrades.forEach((async (studgrade) => {
+  for(let studgrade of studgrades){
     studgrade.totalGrade = studgrade.midtermGrade + studgrade.practicalGrade + studgrade.finalGrade
     await studgrade.save()
     console.log(" total grade saved");
@@ -166,9 +166,40 @@ router.post('/calculatetotalgrade',async (req,res)=>{
     studgrade.gradeletter = totalgradegpaletter
     await studgrade.save()
     console.log(totalgradegpa+"::::::::"+studgrade.totalGrade);
-  }))
+
+
+    const stud= await student.findOne({ _id: studgrade.student });
+    const cours = await course.findOne({_id: studgrade.course})
+    const studcoursegrade = await StudentCourseGrade.findOne({_id:studgrade._id})
+    
+    
+
+    let ind = 0
+     for(let stucurrent of stud.currentcourses){
+      if(stucurrent._id == cours._id){
+         ind = stud.currentcourses.indexOf(stucurrent)
+      }
+     }
+     console.log("yeeeeeeeeeeeeeees"+ind);
+     console.log(stud.coursesgrades);
+     stud.coursesgrades.push(studgrade)
+     await stud.save()
+     
+     stud.currentcourses.splice(ind,1)
+     stud.finishedcourses.push(cours)
+     console.log("current"+stud.currentcourses);
+     console.log("finished"+stud.finishedcourses);
+     await stud.save()
+
+  }
+
+  
   res.send(studgrades)
 })
+
+  router.post('/setgpa',async (req,res)=>{
+
+  })
 
 
 function calculatecoursegradegpa(totalgrade) {
