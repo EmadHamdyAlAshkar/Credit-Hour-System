@@ -198,6 +198,35 @@ router.post('/calculatetotalgrade',async (req,res)=>{
 })
 
   router.post('/setgpa',async (req,res)=>{
+    const studid = req.body.studid
+    const students = await student.find().populate("coursesgrades","student gradegpa")
+    for(let studentt of students){
+      let hours = 0
+      let gradepoint = 0
+      let hours_times_gradepoint = 0
+      const studgradesss = await StudentCourseGrade.find({student:studentt})
+      for(let studgrade of studgradesss){
+        const corse = await course.findOne({_id:studgrade.course})
+        
+        // console.log("hours_times_gradepoint"+hours_times_gradepoint);
+        gradepoint += studgrade.gradegpa
+        hours += corse.hours
+        hours_times_gradepoint += corse.hours * studgrade.gradegpa
+        // console.log("hours_times_gradepoint "+hours_times_gradepoint);
+      }
+      // hours_times_gradepoint -= hours_times_gradepoint
+      let studgpa = hours_times_gradepoint / hours
+
+      // console.log("hours"+hours);
+      // console.log("gradepoint"+gradepoint);
+      // console.log("hours_times_gradepoint for student "+hours_times_gradepoint);
+      // console.log("studgpa"+studgpa);
+      // console.log("*********************");
+      studentt.gpa = studgpa
+      await studentt.save()
+
+    }
+    res.json({status:"true" , message: "GPA calculated successfully for all students"})
 
   })
 
