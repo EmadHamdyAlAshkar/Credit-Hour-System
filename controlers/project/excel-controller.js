@@ -153,19 +153,19 @@ router.post('/grades/final',upload.single('file'),async (req, res) => {
 }
 );
 
-router.post('/calculatetotalgrade',async (req,res)=>{
+router.get('/calculatetotalgrade',async (req,res)=>{
   const studgrades = await StudentCourseGrade.find()
   for(let studgrade of studgrades){
     studgrade.totalGrade = studgrade.midtermGrade + studgrade.practicalGrade + studgrade.finalGrade
     await studgrade.save()
-    console.log(" total grade saved");
+    // console.log(" total grade saved");
 
     const totalgradegpa = calculatecoursegradegpa(studgrade.totalGrade)
     studgrade.gradegpa = totalgradegpa
     const totalgradegpaletter = calculatecoursegradegpaletter(studgrade.totalGrade)
     studgrade.gradeletter = totalgradegpaletter
     await studgrade.save()
-    console.log(totalgradegpa+"::::::::"+studgrade.totalGrade);
+    // console.log(totalgradegpa+"::::::::"+studgrade.totalGrade);
 
 
     const stud= await student.findOne({ _id: studgrade.student });
@@ -180,21 +180,24 @@ router.post('/calculatetotalgrade',async (req,res)=>{
          ind = stud.currentcourses.indexOf(stucurrent)
       }
      }
-     console.log("yeeeeeeeeeeeeeees"+ind);
-     console.log(stud.coursesgrades);
+     if(studgrade.totalGrade < 50){
+      return res.json({message:"OKK"})
+     }
+    //  console.log("yeeeeeeeeeeeeeees"+ind);
+    //  console.log(stud.coursesgrades);
      stud.coursesgrades.push(studgrade)
      await stud.save()
      
      stud.currentcourses.splice(ind,1)
      stud.finishedcourses.push(cours)
-     console.log("current"+stud.currentcourses);
-     console.log("finished"+stud.finishedcourses);
+    //  console.log("current"+stud.currentcourses);
+    //  console.log("finished"+stud.finishedcourses);
      await stud.save()
 
   }
 
   
-  res.send(studgrades)
+  res.json({message: "Total grade and GPA calculated for all student grades"})
 })
 
   router.post('/setgpa',async (req,res)=>{
@@ -222,6 +225,8 @@ router.post('/calculatetotalgrade',async (req,res)=>{
       // console.log("hours_times_gradepoint for student "+hours_times_gradepoint);
       // console.log("studgpa"+studgpa);
       // console.log("*********************");
+      studentt.achievedhours= hours
+      studentt.remaininghourse = 135 - hours
       studentt.gpa = studgpa
       await studentt.save()
 
@@ -362,7 +367,32 @@ function calculatecoursegradegpaletter(totalgrade) {
 
 
 
+router.post('/check-duplicates', async (req, res) => {
+  const codes = req.body.codes;
 
+  // Check if there are any duplicate codes
+  const duplicates = codes.filter((code, index) => codes.indexOf(code) !== index);
+
+  if (duplicates.length > 0) {
+    return res.status(400).json({ message: `Duplicate course codes found: ${duplicates.join(', ')}` });
+  }
+
+  // Check if the codes exist in the database
+  try {
+    const courses = await course.find({ code: { $in: codes } });
+    const courseCodes = courses.map((course) => course.code);
+
+    const missingCodes = codes.filter((code) => !courseCodes.includes(code));
+    if (missingCodes.length > 0) {
+      return res.status(404).json({ message: `Courses not found: ${missingCodes.join(', ')}` });
+    }
+
+    return res.status(200).json({ message: 'All courses found and no duplicate codes' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Error checking course codes' });
+  }
+});
 
 export default router;
 

@@ -10,22 +10,25 @@ async function registercoursetest(req, res, next) {
   let stud = await student.findOne({ _id: studid })
   let cors = []
   cors = req.body.courseid.replace('[', '').replace(']', '').split(', ')
-  
-  
+
+
 
   let sumofrequested = 0
-   await Promise.all(cors.map(async (cours) => {
-    let course = await courses.findOne({_id: cours})
+  await Promise.all(cors.map(async (cours) => {
+    let course = await courses.findOne({ _id: cours })
     console.log(course);
     sumofrequested = sumofrequested + course.hours
     return sumofrequested
 
   }))
-  console.log("summmmmmmssssss"+sumofrequested);
-console.log(stud.availablecredit);
-  if(sumofrequested > stud.availablecredit){
+  console.log("summmmmmmssssss" + sumofrequested);
+  console.log(stud.availablecredit);
+  if (sumofrequested > stud.availablecredit) {
     console.log("Your available credit is less than requested courses credit");
     return await res.json({ message: "The requested courses hours exceeds your available cridet" })
+  }
+  if(sumofrequested<9){
+    return await res.json({message: "You must choose  courses at least of (9) hours"})
   }
 
   if (!stud) {
@@ -136,8 +139,8 @@ async function approveregistration(req, res) {
     return await res.json({ message: "Request not found" })
   }
   let sumofrequested = 0
-   await Promise.all(reques.requestedcourses.map(async (cours) => {
-    let course = await courses.findOne({_id: cours})
+  await Promise.all(reques.requestedcourses.map(async (cours) => {
+    let course = await courses.findOne({ _id: cours })
     sumofrequested = sumofrequested + course.hours
     return sumofrequested
 
@@ -193,7 +196,7 @@ async function approveregistration(req, res) {
     }
     await stud.save()
     console.log("before save");
-    stud.availablecredit = stud.availablecredit-sumofrequested
+    stud.availablecredit = stud.availablecredit - sumofrequested
     await stud.save()
     console.log("after save");
     //change request status to accepted
@@ -221,7 +224,7 @@ async function approveregistration(req, res) {
     //return message if req.body doesn't have (accepted) or (rejected)
     return await res.json({ message: "Please enter (accepted) or (rejected)" })
   }
-  
+
 
   res.json({ Message: "End" })
 }

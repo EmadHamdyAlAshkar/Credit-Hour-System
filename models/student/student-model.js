@@ -111,11 +111,15 @@ const studentSchema=mongoose.Schema({
     },
     remaininghourse:{
         type: Number,
-        default : 125
+        default : 135
+    },
+    achievedhours:{
+        type: Number,
+        default: 0
     },
     availablecredit:{
         type: Number,
-        default : 12
+        default : 15
     },
     currentcourses:[
         {

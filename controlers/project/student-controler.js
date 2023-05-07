@@ -5,6 +5,8 @@ import multer from "../../helpers/Multer"
 import { response } from "express";
 import bcrypt from "bcrypt"
 import XLSX from "xlsx"
+import StudentCourseGrade from "../../models/studentCourseGrade/studentCourseGrade-model";
+import course from "../../models/course/course-model";
 
 // create student
 async function createstudent(req, res, next) {
@@ -91,7 +93,7 @@ async function getallstudents(req, res, next) {
     obj.gender = req.body.gender
   }
   const students = await student.find(obj).all().
-  res.json({ data: students })
+    res.json({ data: students })
 }
 async function deletestudent(req, res, next) {
   const students = await student.findOneAndDelete({
@@ -120,6 +122,7 @@ async function updatestudent(req, res, next) {
 async function getavailablecourses(req, res) {
   const studid = req.body.studid
   const stud = await student.findOne({ _id: studid })
+  const cooorsess = await course.find().select("name hours ")
 
   let availablecourses
   let avail = await Promise.all(stud.finishedcourses.map(async (finished) => {
@@ -130,8 +133,14 @@ async function getavailablecourses(req, res) {
   let found = []
   for (let availablecoursesss of avail) {
     for (let avaaaal of availablecoursesss) {
-
       found.push(avaaaal)
+    }
+  }
+
+  for (let cooorse of cooorsess) {
+
+    if (cooorse.prerequisites.length == 0) {
+      found.push(cooorse)
     }
   }
 
@@ -144,18 +153,43 @@ async function getavailablecourses(req, res) {
     }
   }
 
-  for(let finish of finished){
-    for(let founded of found){
-      if(founded._id == finish._id){
-        let ind = found.indexOf(founded)
-        found.splice(ind,1)
+  let current = []
+  for (let founded of found) {
+    for (let curent of stud.currentcourses) {
+      if (founded._id == curent._id) {
+        current.push(curent)
       }
     }
   }
 
-  res.json({ data:found})
+  for (let finish of finished) {
+    for (let founded of found) {
+      if (founded._id == finish._id) {
+        let ind = found.indexOf(founded)
+        found.splice(ind, 1)
+      }
+    }
+  }
 
+  for (let curent of current) {
+    for (let founded of found) {
+      if (founded._id == curent._id) {
+        let ind = found.indexOf(founded)
+        found.splice(ind, 1)
 
+      }
+    }
+  }
+  res.json({ data: found })
+
+}
+
+async function showstudentreport(req, res) {
+  const studid = req.body.studid
+  const stud = await StudentCourseGrade.find({ student: studid })
+    .populate("course", "-_id -prerequisites -department -semester -createdAt -updatedAt")
+    .select("-_id gradegpa gradeletter")
+  res.json({ data: stud })
 
 
 }
@@ -587,5 +621,6 @@ export default {
   registercourse1,
   getstudentsbycourse,
   getStudentsByCoursesId,
-  getavailablecourses
+  getavailablecourses,
+  showstudentreport
 }
