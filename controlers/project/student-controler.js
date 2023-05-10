@@ -7,6 +7,8 @@ import bcrypt from "bcrypt"
 import XLSX from "xlsx"
 import StudentCourseGrade from "../../models/studentCourseGrade/studentCourseGrade-model";
 import course from "../../models/course/course-model";
+import staff from "../../models/staff/staff-model";
+import instructor from "../../models/instructor/instructor-model";
 
 // create student
 async function createstudent(req, res, next) {
@@ -16,23 +18,23 @@ async function createstudent(req, res, next) {
   }
   const stud = new student({
     _id: req.body.id,
-    full_name: req.body.fullname,
-    country_of_nationality: req.body.countryofnationality,
+    fullname: req.body.fullname,
+    countryofnationality: req.body.countryofnationality,
     religion: req.body.religion,
-    date_of_birth: req.body.dateofbirth,
-    place_of_birth: req.body.placeofbirth,
-    national_id: req.body.nationalid,
-    guardian_name: req.body.guardianname,
+    dateofbirth: req.body.dateofbirth,
+    placeofbirth: req.body.placeofbirth,
+    nationalid: req.body.nationalid,
+    guardianname: req.body.guardianname,
     jop: req.body.jop,
     city: req.body.city,
     address: req.body.address,
-    home_phone: req.body.homephone,
+    homephone: req.body.homephone,
     mobile: req.body.mobile,
     school: req.body.school,
-    fully_qualified: req.body.fullyqualified,
-    graduation_year: req.body.graduationyear,
-    role_of_qualification: req.body.roleofqualification,
-    total_score: req.body.totalscore,
+    fullyqualified: req.body.fullyqualified,
+    graduationyear: req.body.graduationyear,
+    roleofqualification: req.body.roleofqualification,
+    totalscore: req.body.totalscore,
     department: req.body.department,
     gender: req.body.gender,
     email: req.body.email,
@@ -75,7 +77,7 @@ async function getStudentsByCoursesId(req, res, next) {
 
 
   const course = await courses.findOne({ name: courseName });
-  const studentt = await student.find({ currentcourses: course }).select("name -currentcourses -finishedcourses")
+  const studentt = await student.find({ currentcourses: course }).select("fullname -currentcourses -finishedcourses")
 
   return res.json({ data: { students: studentt } })
   // const courseId = courses._id;
@@ -92,8 +94,8 @@ async function getallstudents(req, res, next) {
   if ("gender" in req.body) {
     obj.gender = req.body.gender
   }
-  const students = await student.find(obj).all().
-    res.json({ data: students })
+  const students = await student.find(obj).all()
+   return await res.json({ data: students })
 }
 async function deletestudent(req, res, next) {
   const students = await student.findOneAndDelete({
@@ -183,6 +185,83 @@ async function getavailablecourses(req, res) {
   res.json({ data: found })
 
 }
+async function changepassword(req,res){
+  const oldpassword = req.body.oldpassword
+  const newpassword = req.body.newpassword
+  const confirmnewpassword = req.body.confirmnewpassword
+
+  const stud = await student.findOne({_id:req.body.id})
+  const staf = await staff.findOne({_id: req.body.id})
+  const instruct = await instructor.findOne({_id: req.body.id})
+
+  if(stud){
+    const checkpassword = await bcrypt.compare(oldpassword,stud.password)
+    if(!checkpassword){
+      return res.status(404).json({message:"Old password is wrong"})
+    }
+    if(newpassword != confirmnewpassword){
+      return res.status(404).json({message:"Please enter password two times identically"})
+    }
+    const saltrounds = 10
+    const hashedpassword = await bcrypt.hash(confirmnewpassword, saltrounds)
+    stud.password = hashedpassword
+    await stud.save
+    ((error, result) => {
+      if (error) {
+        res.send(error)
+      }
+      else {
+        return res.json({ status: "true", message: "Password changed successfully" })
+  
+      }
+    });
+  }
+  else if(staf){
+    const checkpassword = await bcrypt.compare(oldpassword,staf.password)
+    if(!checkpassword){
+      return res.status(404).json({message:"Old password is wrong"})
+    }
+    if(newpassword != confirmnewpassword){
+      return res.status(404).json({message:"Please enter password two times identically"})
+    }
+    const saltrounds = 10
+    const hashedpassword = await bcrypt.hash(confirmnewpassword, saltrounds)
+    staf.password = hashedpassword
+    await staf.save((error, result) => {
+      if (error) {
+        res.send(error)
+      }
+      else {
+        return res.json({ status: "true", message: "Password changed successfully" })
+      }
+    });
+  }
+  else if(instruct){
+    const checkpassword = await bcrypt.compare(oldpassword,instruct.password)
+    if(!checkpassword){
+      return res.status(404).json({message:"Old password is wrong"})
+    }
+    if(newpassword != confirmnewpassword){
+      return res.status(404).json({message:"Please enter password two times identically"})
+    }
+    const saltrounds = 10
+    const hashedpassword = await bcrypt.hash(confirmnewpassword, saltrounds)
+    instruct.password = hashedpassword
+    await instruct.save((error, result) => {
+      if (error) {
+        res.send(error)
+      }
+      else {
+        return res.json({ status: "true", message: "Password changed successfully" })
+      }
+    });
+  }
+  else{
+    return res.json({message:"User not found"})
+
+  }
+  
+}
 
 async function showstudentreport(req, res) {
   const studid = req.body.studid
@@ -191,8 +270,10 @@ async function showstudentreport(req, res) {
     .select("-_id gradegpa gradeletter")
   res.json({ data: stud })
 
-
 }
+
+
+
 
 async function registercourse1(req, res, next) {
   let studid = req.body.studid
@@ -622,5 +703,6 @@ export default {
   getstudentsbycourse,
   getStudentsByCoursesId,
   getavailablecourses,
-  showstudentreport
+  showstudentreport,
+  changepassword,
 }

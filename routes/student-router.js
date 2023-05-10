@@ -19,8 +19,8 @@ router.post('/enrollcourse',student_conltroler.enrollcourse)
 router.post('/registercoursetest',registerConrtroller.registercoursetest)
 router.get('/getstudentsbycourse',student_conltroler.getstudentsbycourse)
 router.post('/getStudentsByCoursesId',student_conltroler.getStudentsByCoursesId)
-router.get('/getavailablecourses',student_conltroler.getavailablecourses)
+router.post('/getavailablecourses',student_conltroler.getavailablecourses)
 router.post('/showstudentreport',student_conltroler.showstudentreport)
-
+router.post('/changepassword',student_conltroler.changepassword)
 
 export default router;

@@ -181,19 +181,43 @@ router.get('/calculatetotalgrade',async (req,res)=>{
       }
      }
      if(studgrade.totalGrade < 50){
-      return res.json({message:"OKK"})
-     }
-    //  console.log("yeeeeeeeeeeeeeees"+ind);
-    //  console.log(stud.coursesgrades);
-     stud.coursesgrades.push(studgrade)
-     await stud.save()
+      stud.currentcourses.splice(ind,1)
+     }else if(studgrade.totalGrade>100){
+      return res.json({message: "total grade is more than (100) please check the degrees"})
+
+     }else{
+      let foundgrade = false
+      for(let studentgradea of stud.coursesgrades){
+        const gradeeee = await StudentCourseGrade.findOne({_id:studentgradea})
+        const coorsee = await course.findOne({_id:gradeeee.course})
+        // console.log("gradeeee"+gradeeee);
+        // console.log("+++++++"+gradeeee._id);
+        // console.log("-------"+studgrade._id);
+        
+        if(gradeeee.gradeid == studgrade.gradeid){
+          
+          foundgrade = true
+          
+        }
+        
+      }
+      if(foundgrade == false){
+      stud.coursesgrades.push(studgrade)
+          stud.currentcourses.splice(ind,1)
+          stud.finishedcourses.push(cours)
+          console.log("***********");
+          await stud.save()
+          }
+      // console.log(stud.coursesgrades);
+    //  
+    //  
      
-     stud.currentcourses.splice(ind,1)
-     stud.finishedcourses.push(cours)
+    //  
+    //  
     //  console.log("current"+stud.currentcourses);
     //  console.log("finished"+stud.finishedcourses);
      await stud.save()
-
+    }
   }
 
   

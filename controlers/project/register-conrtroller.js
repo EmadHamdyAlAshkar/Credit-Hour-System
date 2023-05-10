@@ -16,15 +16,15 @@ async function registercoursetest(req, res, next) {
   let sumofrequested = 0
   await Promise.all(cors.map(async (cours) => {
     let course = await courses.findOne({ _id: cours })
-    console.log(course);
+    // console.log(course);
     sumofrequested = sumofrequested + course.hours
     return sumofrequested
 
   }))
-  console.log("summmmmmmssssss" + sumofrequested);
-  console.log(stud.availablecredit);
+  // console.log("summmmmmmssssss" + sumofrequested);
+  // console.log(stud.availablecredit);
   if (sumofrequested > stud.availablecredit) {
-    console.log("Your available credit is less than requested courses credit");
+    // console.log("Your available credit is less than requested courses credit");
     return await res.json({ message: "The requested courses hours exceeds your available cridet" })
   }
   if(sumofrequested<9){
@@ -66,11 +66,11 @@ async function registercoursetest(req, res, next) {
   let finished = false
   for (let cours of cors) {
     let coursessss = await courses.findOne({ _id: cours })
-    console.log("**********************cooooooooorsesssssssss");
+    // console.log("**********************cooooooooorsesssssssss");
 
     for (let finish of stud.finishedcourses) {
       if (finish._id == coursessss._id) {
-        console.log("cooooooooorsesssssssss");
+        // console.log("cooooooooorsesssssssss");
         finished = true
         break
       }
@@ -89,7 +89,7 @@ async function registercoursetest(req, res, next) {
       foundprerequisite = true
       continue
     }
-    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr" + coursessss.prerequisites.length + "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+    // console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr" + coursessss.prerequisites.length + "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
 
     foundprerequisite = false
     for (let coursePre of coursessss.prerequisites) {

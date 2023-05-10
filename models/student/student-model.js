@@ -6,11 +6,11 @@ const studentSchema=mongoose.Schema({
     _id:{
         type:Number,
     },
-    full_name:{
+    fullname:{
         type:String,
 
     },
-    country_of_nationality:{
+    countryofnationality:{
         type: String,
         
     },
@@ -18,19 +18,19 @@ const studentSchema=mongoose.Schema({
         type: String,
         
     },
-    date_of_birth:{
+    dateofbirth:{
         type: String,
         
     },
-    place_of_birth:{
+    placeofbirth:{
         type: String,
         
     },
-    national_id:{
+    nationalid:{
         type: Number,
         
     },
-    guardian_name:{
+    guardianname:{
         type: String,
         
     },
@@ -46,7 +46,7 @@ const studentSchema=mongoose.Schema({
         type: String,
         
     },
-    home_phone:{
+    homephone:{
         type: Number,
         
     },
@@ -58,19 +58,19 @@ const studentSchema=mongoose.Schema({
         type:String,
         
     },
-    fully_qualified:{
+    fullyqualified:{
         type:String,
         
     },
-    graduation_year:{
+    graduationyear:{
         type:Number,
         
     },
-    role_of_qualification:{
+    roleofqualification:{
         type: String,
         
     },
-    total_score:{
+    totalscore:{
         type:Number,
     },
     department:{
@@ -89,7 +89,7 @@ const studentSchema=mongoose.Schema({
         type:Number,
         
     },
-    academic_email:{
+    academicemail:{
         type:String,
         
     },

@@ -1,4 +1,5 @@
 import StudentCourseGrade from "../../models/studentCourseGrade/studentCourseGrade-model";
+import courses from "../../models/course/course-model";
 
 async function creatStudentCourseGrade(req, res, next) {
 
@@ -30,7 +31,9 @@ async function creatStudentCourseGrade(req, res, next) {
 async function getallStudentCourseGrade(req, res, next) {
     // let studid = req.body.studid
     // let reques = await request.find({studentcode : studid})
-    const studgrades = await StudentCourseGrade.find().populate("course","name hours -prerequisites").populate("student","name")
+    const studgrades = await StudentCourseGrade.find()
+    .populate("course","name hours -prerequisites")
+    .populate("student","name -finishedcourses -currentcourses")
     // if(!studid){
     //   return await res.json({data:requests})
 
@@ -39,6 +42,20 @@ async function getallStudentCourseGrade(req, res, next) {
     //   return await res.json({message:"No requests founded"})
     // }
     res.json({data:studgrades})
+  }
+  async function getStudentCourseGradebycoursename(req, res, next) {
+    const courseName = req.body.courseName;
+  
+  
+    const course = await courses.findOne({ name: courseName });
+    const coursegrade = await StudentCourseGrade.find({ course: course })
+  
+    return res.json({ data: { coursegrade: coursegrade } })
+    // const courseId = courses._id;
+  
+    //   const students = await student.find({ currentcourses: courseId });
+  
+    //  res.json({data:course});
   }
 
 
@@ -63,5 +80,6 @@ async function getallStudentCourseGrade(req, res, next) {
 export default{
     creatStudentCourseGrade,
     getallStudentCourseGrade,
-    updateStudentCourseGrade
+    updateStudentCourseGrade,
+    getStudentCourseGradebycoursename
 }

@@ -45,6 +45,15 @@ async function getallcourse(req, res, next) {
     const courses = await course.find(obj).all()
     res.json({data :courses})
 }
+
+async function getcoursebyid(req,res){
+    const corse = await course.findOne({_id:req.body.courseid})
+    if (!corse) {
+        return res.json({message:"Course not found"})
+    }
+    res.json({data:corse})
+}
+
 async function deletecourse(req, res, next) {
     const courses = await course.findOneAndDelete({
         _id: req.body.id
@@ -76,4 +85,5 @@ export default {
     getallcourse,
     updatecourse,
     deletecourse,
+    getcoursebyid
 }
