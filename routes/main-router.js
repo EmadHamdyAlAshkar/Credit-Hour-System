@@ -38,4 +38,10 @@ router.use("/setcridet",setcridet)
 import StudentCourseGrade from "./StudentCourseGrade-router"
 router.use("/",StudentCourseGrade)
 
+import schedule from "./schedule-router"
+router.use("/schedule",schedule)
+
+import academicRegistration from "./academicregistration-router"
+router.use("/",academicRegistration)
+
 export default router;
