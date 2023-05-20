@@ -26,7 +26,7 @@ async function createstaff(req, res, next) {
             res.send(error)
         }
         else {
-            res.send("Staff saved")
+            res.json({status:"true",message:"Staff saved"})
         }
     });
 }

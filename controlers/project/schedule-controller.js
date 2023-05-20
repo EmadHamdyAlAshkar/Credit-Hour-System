@@ -33,6 +33,9 @@ async function getallschedule(req,res){
 async function showscheduleforstudent(req,res){
     const studid = req.body.studid
     const stud = await student.findOne({_id:studid})
+    if(!stud){
+        res.json({message:"Student not found"})
+    }
 
     let schedulesss
     let schedules = await Promise.all(stud.currentcourses.map(async(current)=>{
@@ -40,7 +43,15 @@ async function showscheduleforstudent(req,res){
         return schedulesss
 
     }))
-    res.json({data:schedules})
+
+    let schedulee = []
+    for(let scheduleeee of schedules){
+        for(let scheduleeees of scheduleeee){
+            schedulee.push(scheduleeees)
+        }
+    }
+
+    res.json({data:schedulee})
 
 
 }

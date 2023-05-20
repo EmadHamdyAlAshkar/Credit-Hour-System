@@ -49,6 +49,8 @@ async function getallStudentCourseGrade(req, res, next) {
   
     const course = await courses.findOne({ name: courseName });
     const coursegrade = await StudentCourseGrade.find({ course: course })
+    .populate("student","name -finishedcourses -currentcourses")
+    .populate("course","name -prerequisites")
   
     return res.json({ data: { coursegrade: coursegrade } })
     // const courseId = courses._id;

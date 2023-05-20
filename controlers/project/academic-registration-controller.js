@@ -17,11 +17,11 @@ async function registerationactivation(req,res){
     }
     else if(decision == "deactivate"){
         if(academicregistrationnn.status == false){
-            return res.json({message:"Academic registration is already deactivated"}) 
+            return res.json({status:"false",message:"Academic registration is already deactivated"}) 
         }
         academicregistrationnn.status = false
         await academicregistrationnn.save()
-        return res.json({message:"Academic registration deactivated successfully"})
+        return res.json({status:"false",message:"Academic registration deactivated successfully"})
     }
     else{
         return res.json({message:"Please enter (activate) or (deactivate)"})

@@ -26,7 +26,7 @@ async function createinstructor(req, res, next) {
       res.send(error)
     }
     else {
-      res.send("Instructor saved")
+      res.json({status:"true",message:"Instructor saved"})
     }
   });
 }
