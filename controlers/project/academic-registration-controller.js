@@ -34,9 +34,9 @@ async function registerationactivation(req,res){
 async function showacademicregistrationstatus(req,res){
     const academicregistrationnn = await academicregistration.findOne({_id:1})
     if(academicregistrationnn.status == true){
-        return res.json({status:"true"})
+        return res.json({data:{status:"true"}})
     }else{
-        return res.json({status:"false"})
+        return res.json({data:{status:"false"}})
     }
 }
 
