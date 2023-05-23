@@ -1,5 +1,5 @@
 import express from "express"
-import academicRegistrationController from "../controlers/project/Academic-registration-controller";
+import academicRegistrationController from "../controlers/project/academic-registration-controller";
 
 const router = express.Router();
 
