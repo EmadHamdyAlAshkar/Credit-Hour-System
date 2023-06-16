@@ -44,4 +44,7 @@ router.use("/schedule",schedule)
 import academicRegistration from "./academicregistration-router"
 router.use("/",academicRegistration)
 
+import exam from "./exam-router"
+router.use("/exam",exam)
+
 export default router;

@@ -55,7 +55,7 @@ async function login(req,res) {
     if(usr){
         const checkpassword = await bcrypt.compare(req.body.password,usr.password)
         if(!checkpassword){
-            return res.status(404).send('Invalid email or password!')
+            return res.status(404).json({status:"false",message:'Invalid email or password!'})
         }    
         const token = usr.generateTokens()
     res.send('Hello '+usr.name+" "+token+" you are user")
@@ -63,7 +63,7 @@ async function login(req,res) {
     else if(staf){
         const checkpassword = await bcrypt.compare(req.body.password,staf.password)
         if(!checkpassword){
-            return res.status(404).send('Invalid email or password!')
+            return res.status(404).json({status:"false",message:'Invalid email or password!'})
         }    
         const token = staf.generateTokens()
     // res.send('Hello '+staf.name+" "+token+" you are staff")
@@ -73,7 +73,7 @@ async function login(req,res) {
     else if(stud){
         const checkpassword = await bcrypt.compare(req.body.password,stud.password)
         if(!checkpassword){
-            return res.status(404).send('Invalid email or password!')
+            return res.status(404).json({status:"false",message:'Invalid email or password!'})
         }    
         const token = stud.generateTokens()
     res.json({status: "true",message : "Login successful",type: "Student" ,data :stud,token :token})
@@ -81,7 +81,7 @@ async function login(req,res) {
     else if(admn){
         const checkpassword = await bcrypt.compare(req.body.password,admn.password)
         if(!checkpassword){
-            return res.status(404).send('Invalid email or password!')
+            return res.status(404).json({status:"false",message:'Invalid email or password!'})
         }    
         const token = admn.generateTokens()
     res.send('Hello '+admn.username+" "+token+" you are admin")
@@ -89,7 +89,7 @@ async function login(req,res) {
     else if(instruct){
         const checkpassword = await bcrypt.compare(req.body.password,instruct.password)
         if(!checkpassword){
-            return res.status(404).send('Invalid email or password!')
+            return res.status(404).json({status:"false",message:'Invalid email or password!'})
         }    
         const token = instruct.generateTokens()
         res.json({status: "true",message : "Login successful",type: "Instructor" ,data :instruct,token :token})
@@ -97,7 +97,7 @@ async function login(req,res) {
     
     // const token = Jwt.sign({_id:usr._id},"privatekey")
     else{
-        res.send("not found")
+        return res.status(404).json({status:"false",message:'Invalid email or password!'})
     }
 
 }

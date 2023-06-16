@@ -1,5 +1,6 @@
 import schedule from "../../models/schedule/schedule-model";
 import student from "../../models/student/student-model"
+import instructor from "../../models/instructor/instructor-model";
 
 
 
@@ -8,12 +9,18 @@ async function createschedule(req, res, next) {
     if (schedul) {
         return res.json({ message: "Schedule already exists" })
     }
+    const instructoor = req.body.instructor
     const scheduleee = new schedule({
         course: req.body.course,
         day: req.body.day,
         hour: req.body.hour,
-        hall: req.body.hall
+        hall: req.body.hall,
+        instructor: instructoor
     })
+    const instruct = await instructor.findOne({_id:instructoor})
+    if(!instruct){
+        return await res.json({status:"false",message:"Instructor not found"})
+    }
     await scheduleee.save((error, result) => {
         if (error) {
           res.send(error)
@@ -39,7 +46,32 @@ async function showscheduleforstudent(req,res){
 
     let schedulesss
     let schedules = await Promise.all(stud.currentcourses.map(async(current)=>{
-        schedulesss = await schedule.find({course:current}).populate("course","name")
+        schedulesss = await schedule.find({course:current}).populate("course","name").populate("instructor","name")
+        return schedulesss
+
+    }))
+
+    let schedulee = []
+    for(let scheduleeee of schedules){
+        for(let scheduleeees of scheduleeee){
+            schedulee.push(scheduleeees)
+        }
+    }
+
+    res.json({data:schedulee})
+
+
+}
+async function showscheduleforinstructor(req,res){
+    const instructorid = req.body.instructorid
+    const instruct = await instructor.findOne({_id:instructorid})
+    if(!instruct){
+        res.json({message:"Instructor not found"})
+    }
+
+    let schedulesss
+    let schedules = await Promise.all(instruct.courses.map(async(corse)=>{
+        schedulesss = await schedule.find({course:corse}).populate("course","name").select("-instructor")
         return schedulesss
 
     }))
@@ -60,6 +92,7 @@ async function showscheduleforstudent(req,res){
 export default {
     createschedule,
     getallschedule,
-    showscheduleforstudent
+    showscheduleforstudent,
+    showscheduleforinstructor
 
 }

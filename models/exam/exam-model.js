@@ -3,7 +3,7 @@ import autopopulate from "mongoose-autopopulate"
 // const Joi = require('Joi');
 import Jwt from "jsonwebtoken"
 
-const scheduleSchema = mongoose.Schema({
+const examSchema = mongoose.Schema({
     course: 
         {
             type: String,
@@ -16,7 +16,7 @@ const scheduleSchema = mongoose.Schema({
     ,
     day:{
         type:String,
-        enum:["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"]
+        
     },
     hour:{
         type: String
@@ -24,10 +24,6 @@ const scheduleSchema = mongoose.Schema({
     hall:{
         type:String,
 
-    },
-    instructor:{
-        type:Number,
-        ref:"instructor"
     }
 
 }, {
@@ -37,10 +33,10 @@ const scheduleSchema = mongoose.Schema({
 
 
 
-scheduleSchema.plugin(autopopulate)
+examSchema.plugin(autopopulate)
 import checkQuery from '../../plugins/checkQuery'
 import { date, number } from "joi";
 import { times } from "lodash";
-scheduleSchema.plugin(checkQuery)
-const schedule = mongoose.model('schedules', scheduleSchema);
-export default schedule;
+examSchema.plugin(checkQuery)
+const exam = mongoose.model('exams', examSchema);
+export default exam;
