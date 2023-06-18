@@ -22,5 +22,6 @@ router.post('/getStudentsByCoursesId',student_conltroler.getStudentsByCoursesId)
 router.post('/getavailablecourses',student_conltroler.getavailablecourses)
 router.post('/showstudentreport',student_conltroler.showstudentreport)
 router.post('/changepassword',student_conltroler.changepassword)
+router.post('/showmilitarystatus',student_conltroler.showmilitarystatus)
 
 export default router;

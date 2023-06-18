@@ -148,7 +148,11 @@ const studentSchema=mongoose.Schema({
             ref:"StudentCourseGrade",
             
         }
-    ]
+    ],
+    military:{
+        type: Boolean,
+        default:false
+    }
     
 },{ timestamps: true
     , versionKey: false

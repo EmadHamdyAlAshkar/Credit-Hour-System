@@ -418,6 +418,31 @@ router.post('/check-duplicates', async (req, res) => {
   }
 });
 
+
+router.post('/military',upload.single('file'),async (req, res) => {
+  const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const rows = xlsx.utils.sheet_to_json(sheet);
+
+  for (let row of rows) {
+    // Find the student and course
+    const stud= await student.findOne({ _id: row['student'] });
+    console.log(row.status);
+    
+    if (row.status == "passed"){
+      stud.military = true
+      await stud.save()
+
+
+    }
+  }
+  
+
+  res.json({message:'Military sheet uploaded successfully'});
+}
+);
+
+
 export default router;
 
 

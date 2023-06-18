@@ -89,10 +89,36 @@ async function showscheduleforinstructor(req,res){
 }
 
 
+async function updateschedule(req, res, next) {
+    let obj = {}
+    if ("day" in req.body) {
+        obj.day = req.body.day
+    }
+    if ("hour" in req.body) {
+        obj.hour = req.body.hour
+    }
+    if ("hall" in req.body) {
+        obj.hall = req.body.hall
+    }
+    if ("instructor" in req.body) {
+        obj.instructor = req.body.instructor
+        const instruct = await instructor.findOne({_id:req.body.instructor})
+        if(!instruct){
+            return await res.json({message:"Instructor not found"})
+        }
+    }
+    const schedules = await schedule.findOneAndUpdate({
+        course: req.body.course
+    }, obj)
+    res.json({message:"Schedule updated successfully"})
+}
+
+
 export default {
     createschedule,
     getallschedule,
     showscheduleforstudent,
-    showscheduleforinstructor
+    showscheduleforinstructor,
+    updateschedule
 
 }

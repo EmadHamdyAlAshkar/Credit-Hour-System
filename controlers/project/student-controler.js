@@ -272,6 +272,11 @@ async function showstudentreport(req, res) {
 
 }
 
+async function showmilitarystatus(req,res){
+  const studid = req.body.studid
+  const stud = await student.findOne({_id:studid})
+  res.json({status:stud.military})
+}
 
 
 
@@ -705,4 +710,6 @@ export default {
   getavailablecourses,
   showstudentreport,
   changepassword,
+  showmilitarystatus,
+
 }

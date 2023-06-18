@@ -56,10 +56,21 @@ async function showexamforstudent(req,res){
 
 }
 
+async function deleteallexams(req,res){
+
+const exams = await exam.deleteMany()
+
+res.json({message:"Okkkkkk"})
+
+}
+
+
+
 
 export default {
     createexam,
     getallexam,
-    showexamforstudent
+    showexamforstudent,
+    deleteallexams
 
 }
