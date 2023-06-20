@@ -10,7 +10,7 @@ const router=express.Router();
 
 router.post('/createstudent',student_conltroler.createstudent)
 router.get('/getallstudents',student_conltroler.getallstudents)
-router.get('/getonestudent',student_conltroler.getonestudent)
+router.post('/getonestudent',student_conltroler.getonestudent)
 router.put('/updatestudent',student_conltroler.updatestudent)
 router.delete('/deletestudent',[auth,staff],student_conltroler.deletestudent)
 router.post('/registercourse',student_conltroler.registercourse)
