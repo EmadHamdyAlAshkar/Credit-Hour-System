@@ -105,7 +105,7 @@ router.post('/grades/practical',upload.single('file'),async (req, res) => {
 
       if(!studgrad){
 
-        return  res.send("Worng student code ("+row.student+") or course code ("+row.course+") in row: "+Row)
+        return  res.json({message:"Worng student code ("+row.student+") or course code ("+row.course+") in row: "+Row})
 
       }
       
@@ -116,7 +116,9 @@ router.post('/grades/practical',upload.single('file'),async (req, res) => {
       );
     }
 
-    res.send('Practical grades uploaded successfully');
+    res.json({status:"true",message:'Practical grades uploaded successfully'});
+
+    
   }
 );
 
@@ -138,7 +140,7 @@ router.post('/grades/final',upload.single('file'),async (req, res) => {
 
     if(!studgrad){
 
-      return  res.send("Worng student code ("+row.student+") or course code ("+row.course+") in row: "+Row)
+      return  res.json({message:"Worng student code ("+row.student+") or course code ("+row.course+") in row: "+Row})
 
     }
     
@@ -149,7 +151,8 @@ router.post('/grades/final',upload.single('file'),async (req, res) => {
     );
   }
 
-  res.send('Final grades uploaded successfully');
+
+  res.json({status:"true",message:'Final grades uploaded successfully'});
 }
 );
 
@@ -221,7 +224,7 @@ router.get('/calculatetotalgrade',async (req,res)=>{
   }
 
   
-  res.json({message: "Total grade and GPA calculated for all student grades"})
+  res.json({status:"true",message: "Total grade and GPA calculated for all student grades"})
 })
 
   router.post('/setgpa',async (req,res)=>{
@@ -438,7 +441,7 @@ router.post('/military',upload.single('file'),async (req, res) => {
   }
   
 
-  res.json({message:'Military sheet uploaded successfully'});
+  res.json({status:"true",message:'Military sheet uploaded successfully'});
 }
 );
 
