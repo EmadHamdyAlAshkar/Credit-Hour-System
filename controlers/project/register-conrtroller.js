@@ -23,11 +23,19 @@ async function registercoursetest(req, res, next) {
   }))
   // console.log("summmmmmmssssss" + sumofrequested);
   // console.log(stud.availablecredit);
+  let sumofcurrent = 0
+  await Promise.all(stud.currentcourses.map(async(curnt)=>{
+    let course = await courses.findOne({ _id: curnt })
+    sumofcurrent = sumofcurrent + course.hours
+    return sumofcurrent
+  }))
+  
+
   if (sumofrequested > stud.availablecredit) {
     // console.log("Your available credit is less than requested courses credit");
     return await res.json({ message: "The requested courses hours exceeds your available cridet" })
   }
-  if(sumofrequested<9){
+  if(sumofrequested<9 && sumofcurrent<9){
     return await res.json({message: "You must choose  courses at least of (9) hours"})
   }
 

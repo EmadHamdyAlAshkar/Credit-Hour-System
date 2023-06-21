@@ -42,10 +42,14 @@ async function getallinstructors(req, res, next) {
   res.json({data:instructors})
 }
 async function deleteinstructor(req, res, next) {
+  const instruct = await instructor.findOne({_id:req.body.id})
+  if(!instruct){
+    return res.json({status:"false",message:"Instructor not found"})
+  }
   const instructors = await instructor.findOneAndDelete({
     _id: req.body.id
   })
-  res.send(instructors)
+  res.json({status:"true",message:"Instructor deleted"})
 }
 async function updateinstructor(req, res, next) {
   let obj = {}

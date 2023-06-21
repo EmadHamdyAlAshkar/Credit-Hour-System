@@ -98,10 +98,14 @@ async function getallstudents(req, res, next) {
    return await res.json({ data: students })
 }
 async function deletestudent(req, res, next) {
+  const stud = await student.findOne({_id:req.body.id})
+  if(!stud){
+    return res.json({status:"false",message:"Student not found"})
+  }
   const students = await student.findOneAndDelete({
     _id: req.body.id
   })
-  res.send(students)
+  res.json({status:"true",message:"Student deleted"})
 }
 async function updatestudent(req, res, next) {
   let obj = {}

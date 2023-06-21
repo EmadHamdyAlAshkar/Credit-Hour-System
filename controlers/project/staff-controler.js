@@ -42,10 +42,14 @@ async function getallstaff(req, res, next) {
     res.json({data:staffs})
 }
 async function deletestaff(req, res, next) {
+    const staf = await staff.findOne({_id: req.body.id})
+    if(!staf){
+        return res.json({status:"false",message:"Staff not found"})
+    }
     const staffs = await staff.findOneAndDelete({
         _id: req.body.id
     })
-    res.json({data:staffs})
+    res.json({status:"true",message:"Staff deleted"})
 }
 async function updatestaff(req, res, next) {
     let obj = {}
