@@ -131,7 +131,7 @@ async function registercoursetest(req, res, next) {
 
   })
   await requs.save();
-  return await res.json({ message: "Pending request is sent to admin" })
+  return await res.json({ status:"true",message: "Pending request is sent to admin" })
 
 }
 
