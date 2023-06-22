@@ -85,10 +85,10 @@ const studentSchema=mongoose.Schema({
         type:String,
         
     },
-    level:{
-        type:Number,
+    // level:{
+    //     type:Number,
         
-    },
+    // },
     academicemail:{
         type:String,
         
@@ -99,7 +99,7 @@ const studentSchema=mongoose.Schema({
     },
     isStudent: {
         type: Boolean,
-        
+        default: true
         
     },
     gpa:{
