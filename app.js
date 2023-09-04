@@ -9,7 +9,7 @@ import mongoose from 'mongoose'
 
 const app = express();
 ///?retryWrites=true&w=majority
-mongoose.connect("mongodb+srv://emadh732:Emad148@credit-hour-system.svo6o5g.mongodb.net/test",{ autoIndex: true })
+mongoose.connect("connection string here",{ autoIndex: true })
 // mongoose.set('strictQuery', true)
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
